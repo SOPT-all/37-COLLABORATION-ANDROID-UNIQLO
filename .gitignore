@@ -198,6 +198,7 @@ gen/
 out/
 
 # Gradle files
+gradle.xml
 
 # Signing files
 .signing/
