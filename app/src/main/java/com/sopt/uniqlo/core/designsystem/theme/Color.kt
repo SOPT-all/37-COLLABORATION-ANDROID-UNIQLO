@@ -1,4 +1,4 @@
-package com.sopt.uniqlo.ui.theme
+package com.sopt.uniqlo.core.designsystem.theme
 
 import androidx.compose.ui.graphics.Color
 
