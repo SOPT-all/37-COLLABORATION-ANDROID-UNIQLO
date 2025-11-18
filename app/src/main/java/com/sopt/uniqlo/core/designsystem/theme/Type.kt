@@ -1,24 +1,23 @@
 package com.sopt.uniqlo.core.designsystem.theme
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.sopt.uniqlo.R
 
 object PretendardFont {
-    val semiBold = FontFamily(Font(0, FontWeight.SemiBold))
-    val medium = FontFamily(Font(0, FontWeight.Medium))
-    val regular = FontFamily(Font(0, FontWeight.Normal))
-    val light = FontFamily(Font(0, FontWeight.Light))
+    val semiBold = FontFamily(Font(R.font.pretendard_semibold))
+    val medium = FontFamily(Font(R.font.pretendard_medium))
+    val regular = FontFamily(Font(R.font.pretendard_regular))
+    val light = FontFamily(Font(R.font.pretendard_light))
 }
 
 object RedditSansFont {
-    val semiBold = FontFamily(Font(0, FontWeight.SemiBold))
-    val medium = FontFamily(Font(0, FontWeight.Medium))
-    val regular = FontFamily(Font(0, FontWeight.Normal))
+    val semiBold = FontFamily(Font(R.font.redditsanscondensed_semibold))
+    val medium = FontFamily(Font(R.font.redditsanscondensed_medium))
+    val regular = FontFamily(Font(R.font.redditsanscondensed_regular))
 }
 
 sealed interface TypographyTokens {
@@ -73,7 +72,7 @@ data class UniqloTypography(
     val reddit: TypographyTokens.Reddit,
 )
 
-val uniqloDefaultTypography = UniqloTypography(
+val defaultUniqloTypography = UniqloTypography(
     title = TypographyTokens.Title(
         sb_26 = TextStyle(
             fontFamily = PretendardFont.semiBold,
@@ -188,5 +187,3 @@ val uniqloDefaultTypography = UniqloTypography(
         ),
     )
 )
-
-val localUniqloTypography = staticCompositionLocalOf { uniqloDefaultTypography }

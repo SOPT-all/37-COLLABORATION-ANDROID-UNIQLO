@@ -7,8 +7,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+
+val defaultUniqloColors = UniqloColors()
+
+val localUniqloColors = staticCompositionLocalOf { defaultUniqloColors }
+
+val localUniqloTypography = staticCompositionLocalOf { defaultUniqloTypography }
 
 object UniqloTheme {
     val colors: UniqloColors
@@ -40,11 +47,9 @@ fun UniqloTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {
-    val colors = defaultUniqloColors
-
     ProvideUniqloColorsAndTypography(
-        colors = colors,
-        typography = uniqloDefaultTypography
+        colors = defaultUniqloColors,
+        typography = defaultUniqloTypography
     ) {
         val view = LocalView.current
         if (!view.isInEditMode) {

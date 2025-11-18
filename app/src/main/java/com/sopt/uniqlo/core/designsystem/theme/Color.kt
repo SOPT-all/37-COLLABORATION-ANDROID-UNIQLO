@@ -1,7 +1,6 @@
 package com.sopt.uniqlo.core.designsystem.theme
 
 import androidx.compose.runtime.Immutable
-import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 val White = Color(0xFFFFFFFF)
@@ -35,7 +34,3 @@ data class UniqloColors(
     val gray900: Color = Gray900,
     val black50: Color = Black_50,
 )
-
-val defaultUniqloColors = UniqloColors()
-
-val localUniqloColors = staticCompositionLocalOf { defaultUniqloColors }
