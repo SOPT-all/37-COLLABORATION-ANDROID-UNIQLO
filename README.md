@@ -13,9 +13,12 @@
     - compileSDK :
 
 ## 3. Structure & Architecture
-- 주요 개발 언어 : 
-- 아키텍처 :
-- 디자인 패턴 : 
+- 주요 개발 언어 : Kotlin
+- 아키텍처 : Clean Architecture
+- 디자인 패턴 : MVVM
 - 주요 라이브러리 / 프레임 워크 :
+    - Jetpack Compose
+    - Dagger Hilt
+    - Retrofit
 
 ## 4. 구현 영상
