@@ -34,3 +34,5 @@ data class UniqloColors(
     val gray900: Color = Gray900,
     val black50: Color = Black_50,
 )
+
+val defaultUniqloColors = UniqloColors()

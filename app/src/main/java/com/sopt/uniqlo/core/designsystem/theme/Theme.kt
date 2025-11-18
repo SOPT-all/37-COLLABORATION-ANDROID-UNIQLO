@@ -11,8 +11,6 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
-val defaultUniqloColors = UniqloColors()
-
 val localUniqloColors = staticCompositionLocalOf { defaultUniqloColors }
 
 val localUniqloTypography = staticCompositionLocalOf { defaultUniqloTypography }
