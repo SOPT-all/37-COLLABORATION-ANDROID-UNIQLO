@@ -66,6 +66,8 @@ dependencies {
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.timber)
+    implementation(libs.androidx.material3)
+    implementation("androidx.compose.material:material-icons-extended")
 
     debugImplementation(libs.bundles.debug)
     testImplementation(libs.bundles.unit.test)
