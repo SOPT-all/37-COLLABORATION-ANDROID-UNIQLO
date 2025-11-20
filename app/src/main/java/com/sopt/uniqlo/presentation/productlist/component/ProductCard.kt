@@ -36,7 +36,7 @@ import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
 fun ProductCard(
     product: ProductUiModel,
     onItemClick: (Long) -> Unit,
-    onFavoriteToggle: (Long, Boolean) -> Unit,
+    onFavoriteToggle: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -71,7 +71,7 @@ fun ProductCard(
                     tint = Color.Unspecified,
                     modifier = Modifier
                         .size(22.dp)
-                        .clickable { onFavoriteToggle(product.id, !product.isFavorite) }
+                        .clickable { onFavoriteToggle(product.id) }
                 )
             }
 
@@ -252,13 +252,13 @@ private fun ProductCardPreview() {
             ProductCard(
                 product = sampleProductSale,
                 onItemClick = {},
-                onFavoriteToggle = { _, _ -> },
+                onFavoriteToggle = { _ -> },
                 modifier = Modifier.weight(1f)
             )
             ProductCard(
                 product = sampleProductNormal,
                 onItemClick = {},
-                onFavoriteToggle = { _, _ -> },
+                onFavoriteToggle = { _ -> },
                 modifier = Modifier.weight(1f)
             )
         }
