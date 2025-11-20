@@ -1,7 +1,6 @@
 package com.sopt.uniqlo.presentation.category.component
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -14,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
+import com.sopt.uniqlo.core.extension.noRippleClickable
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
@@ -56,8 +56,8 @@ private fun CategoryListItem(
                 }
             )
             .fillMaxWidth()
-            .clickable(onClick = { onClickCategory(category) })
-            .padding(horizontal = 19.dp, vertical = 9.dp),
+            .noRippleClickable(onClick = { onClickCategory(category) })
+            .padding(horizontal = 19.dp, vertical = 10.dp),
         contentAlignment = Alignment.CenterStart
     ) {
         Text(
@@ -70,7 +70,7 @@ private fun CategoryListItem(
             maxLines = 1,
             softWrap = false,
             color = UniqloTheme.colors.gray600,
-            modifier = Modifier.padding(end = 20.dp)
+            modifier = Modifier.padding(end = 10.dp)
         )
     }
 }
