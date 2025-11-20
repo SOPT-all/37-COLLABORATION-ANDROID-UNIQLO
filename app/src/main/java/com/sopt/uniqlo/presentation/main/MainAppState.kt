@@ -8,7 +8,11 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.sopt.uniqlo.presentation.dummy.navigation.Dummy
+import com.sopt.uniqlo.presentation.category.navigation.navigateCategory
+import com.sopt.uniqlo.presentation.home.navigation.Home
+import com.sopt.uniqlo.presentation.home.navigation.navigateHome
+import com.sopt.uniqlo.presentation.mypage.navigation.navigateMyPage
+import com.sopt.uniqlo.presentation.wishlist.navigation.navigateWishList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -20,9 +24,9 @@ class MainAppState(
     val navController: NavHostController,
     coroutineScope: CoroutineScope,
 ) {
-    val startDestination = Dummy
+    val startDestination = Home
 
-    // 1. NavController의 Flow를 관찰하여 현재 Destination을 StateFlow로 변환, 초기값은 Splash
+    // NavController의 Flow를 관찰하여 현재 Destination을 StateFlow로 변환
     private val currentDestination = navController.currentBackStackEntryFlow
         .map { it.destination }
         .stateIn(
@@ -31,7 +35,7 @@ class MainAppState(
             initialValue = null
         )
 
-    // 2. 파생 상태(Derived State)를 Composable 종속성 없이 StateFlow로 생성
+    // 파생 상태(Derived State)를 Composable 종속성 없이 StateFlow로 생성
     val currentTab: StateFlow<MainTab?> = currentDestination
         .map { destination ->
             MainTab.find { tab ->
@@ -44,7 +48,7 @@ class MainAppState(
             initialValue = null
         )
 
-    // 3. UI 표시 여부 또한 StateFlow<Boolean>으로 명확하게 노출
+    // UI 표시 여부 또한 StateFlow<Boolean>으로 명확하게 노출
     val isBottomBarVisible: StateFlow<Boolean> = currentDestination
         .map { destination ->
             MainTab.contains { tab ->
@@ -69,7 +73,12 @@ class MainAppState(
             }
         }
 
-
+        when (tab) {
+            MainTab.HOME -> navController.navigateHome(navOptions)
+            MainTab.CATEGORY -> navController.navigateCategory(navOptions)
+            MainTab.WISHLIST -> navController.navigateWishList(navOptions)
+            MainTab.MYPAGE -> navController.navigateMyPage(navOptions)
+        }
     }
 
     fun navigateUp() {

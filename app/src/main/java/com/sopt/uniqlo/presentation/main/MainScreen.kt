@@ -12,12 +12,18 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
-import com.sopt.dive.presentation.main.component.MainBottomBar
+import com.sopt.uniqlo.presentation.main.component.MainBottomBar
+import com.sopt.uniqlo.core.designsystem.component.UniqloTopbar
+import com.sopt.uniqlo.presentation.category.navigation.categoryGraph
 import com.sopt.uniqlo.presentation.dummy.navigation.dummyGraph
+import com.sopt.uniqlo.presentation.home.navigation.homeGraph
+import com.sopt.uniqlo.presentation.mypage.navigation.myPageGraph
+import com.sopt.uniqlo.presentation.wishlist.navigation.wishListGraph
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun MainScreen(
+    modifier: Modifier = Modifier,
     appState: MainAppState = rememberMainAppState(),
 ) {
     val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
@@ -32,7 +38,10 @@ fun MainScreen(
                 onTabSelected = appState::navigate
             )
         },
-        modifier = Modifier
+        topBar = {
+            UniqloTopbar()
+        },
+        modifier = modifier
             .fillMaxSize()
             .navigationBarsPadding()
             .statusBarsPadding()
@@ -66,6 +75,26 @@ fun MainScreen(
             startDestination = appState.startDestination
         ) {
             dummyGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
+            )
+
+            homeGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
+            )
+
+            categoryGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
+            )
+
+            wishListGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
+            )
+
+            myPageGraph(
                 paddingValues = innerPadding,
                 navigateUp = appState::navigateUp
             )
