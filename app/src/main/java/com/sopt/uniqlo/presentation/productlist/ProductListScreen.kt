@@ -9,10 +9,11 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringArrayResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +27,9 @@ import com.sopt.uniqlo.presentation.productlist.component.ProductFilterBar
 import com.sopt.uniqlo.presentation.productlist.component.ProductListHeader
 import com.sopt.uniqlo.presentation.productlist.model.FilterChipModel
 import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.persistentListOf
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ProductListRoute(
@@ -33,28 +37,26 @@ fun ProductListRoute(
     modifier: Modifier = Modifier,
     viewModel: ProductListViewModel = hiltViewModel()
 ) {
-    val categories = stringArrayResource(id = R.array.product_top_categories).toList()
-    val interactiveCategoryName = stringResource(id = R.string.product_interactive_category)
+    val categories = stringArrayResource(id = R.array.product_top_categories).toImmutableList()
     val filterNames = stringArrayResource(id = R.array.product_filters).toList()
 
+    var filterItems: ImmutableList<FilterChipModel> by remember {
+        mutableStateOf(createFilterItems(filterNames))
+    }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-    val filterItems = remember { createFilterItems(filterNames) }
-
     val productList = when (val state = uiState.productListState) {
-        is UiState.Success -> state.data.toList()
-        else -> emptyList()
+        is UiState.Success -> state.data
+        else -> persistentListOf()
     }
 
     ProductListScreen(
         paddingValues = paddingValues,
         totalCount = uiState.totalCount,
         categories = categories,
-        interactiveCategoryName = interactiveCategoryName,
+        selectedTabIndex = uiState.selectedTabIndex,
         filterItems = filterItems,
         productList = productList,
-        selectedCategory = uiState.selectedCategory,
-        onCategorySelect = { },
+        onTabSelected = { },
         onFilterSelect = { },
         onFavoriteToggle = viewModel::onFavoriteToggle,
         modifier = modifier
@@ -67,11 +69,10 @@ fun ProductListScreen(
     paddingValues: PaddingValues,
     totalCount: Int,
     categories: List<String>,
-    interactiveCategoryName: String,
-    filterItems: List<FilterChipModel>,
-    productList: List<ProductUiModel>,
-    selectedCategory: String,
-    onCategorySelect: (String) -> Unit,
+    selectedTabIndex: Int,
+    filterItems: ImmutableList<FilterChipModel>,
+    productList: ImmutableList<ProductUiModel>,
+    onTabSelected: (Int) -> Unit,
     onFilterSelect: (FilterChipModel) -> Unit,
     onFavoriteToggle: (Long) -> Unit,
     modifier: Modifier = Modifier
@@ -88,9 +89,8 @@ fun ProductListScreen(
                 // 카테고리 탭
                 ProductCategoryTab(
                     categories = categories,
-                    selectedCategory = selectedCategory,
-                    interactiveCategoryName = interactiveCategoryName,
-                    onCategorySelected = onCategorySelect
+                    selectedTabIndex = selectedTabIndex,
+                    onTabSelected = onTabSelected,
                 )
 
                 // 필터 바
@@ -120,18 +120,19 @@ fun ProductListScreen(
     }
 }
 
-private fun createFilterItems(filterNames: List<String>): List<FilterChipModel> {
+private fun createFilterItems(filterNames: List<String>): ImmutableList<FilterChipModel> {
     val resetIcon = R.drawable.ic_reset
     val downArrowIcon = R.drawable.ic_filter
 
-    return filterNames.map { name ->
+    return filterNames.mapIndexed { index, name ->
         val iconId = if (name == "초기화") resetIcon else downArrowIcon
         FilterChipModel(
+            id = (index + 1).toLong(),
             name = name,
             icon = iconId,
             isSelected = false
         )
-    }
+    }.toImmutableList()
 }
 
 @Preview(showBackground = true)

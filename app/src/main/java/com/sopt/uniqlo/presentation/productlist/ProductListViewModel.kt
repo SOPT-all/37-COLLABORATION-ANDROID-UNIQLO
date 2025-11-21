@@ -8,7 +8,7 @@ import com.sopt.uniqlo.presentation.productlist.model.toUiModel
 import com.sopt.uniqlo.presentation.productlist.state.ProductListSideEffect
 import com.sopt.uniqlo.presentation.productlist.state.ProductListState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toPersistentList
+import kotlinx.collections.immutable.toImmutableList
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -42,13 +42,14 @@ class ProductListViewModel @Inject constructor(
             )
         }
         viewModelScope.launch {
-            getProductListUseCase(_uiState.value.selectedCategory)
+            getProductListUseCase()
                 .onSuccess { data ->
                     _uiState.update { state ->
                         val uiModels = data.toUiModel(favoriteMap)
 
                         state.copy(
                             productListState = UiState.Success(uiModels),
+                            selectedTabIndex = 2,
                             totalCount = uiModels.size
                         )
                     }
@@ -75,7 +76,7 @@ class ProductListViewModel @Inject constructor(
                 } else {
                     it
                 }
-            }.toPersistentList()
+            }.toImmutableList()
 
             _uiState.update {
                 it.copy(

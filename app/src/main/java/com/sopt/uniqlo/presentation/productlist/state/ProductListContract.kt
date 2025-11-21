@@ -8,7 +8,7 @@ import kotlinx.collections.immutable.ImmutableList
 @Immutable
 data class ProductListState(
     val productListState: UiState<ImmutableList<ProductUiModel>> = UiState.Loading,
-    val selectedCategory: String = "재킷 & 블레이저",
+    val selectedTabIndex: Int = 2,
     val totalCount: Int = 0
 )
 

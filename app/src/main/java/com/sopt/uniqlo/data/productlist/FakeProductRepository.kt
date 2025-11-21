@@ -6,7 +6,7 @@ import javax.inject.Inject
 
 class FakeProductRepository @Inject constructor() : ProductRepository {
 
-    override suspend fun getProducts(category: String): Result<List<ProductEntity>> {
+    override suspend fun getProducts(): Result<List<ProductEntity>> {
         val dummyList = listOf(
             ProductEntity(
                 id = 1L,

@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetProductListUseCase @Inject constructor(
     private val repository: FakeProductRepository
 ) {
-    suspend operator fun invoke(category: String): Result<List<ProductEntity>> {
-        return repository.getProducts(category)
+    suspend operator fun invoke(): Result<List<ProductEntity>> {
+        return repository.getProducts()
     }
 }
