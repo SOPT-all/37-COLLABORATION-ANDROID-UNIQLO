@@ -3,11 +3,11 @@ package com.sopt.uniqlo.presentation.productlist.state
 import androidx.compose.runtime.Immutable
 import com.sopt.uniqlo.core.util.UiState
 import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
-import kotlinx.collections.immutable.PersistentList
+import kotlinx.collections.immutable.ImmutableList
 
 @Immutable
 data class ProductListState(
-    val productListState: UiState<PersistentList<ProductUiModel>> = UiState.Empty,
+    val productListState: UiState<ImmutableList<ProductUiModel>> = UiState.Loading,
     val selectedCategory: String = "재킷 & 블레이저",
     val totalCount: Int = 0
 )
