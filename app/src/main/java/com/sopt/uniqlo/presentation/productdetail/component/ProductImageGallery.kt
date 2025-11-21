@@ -25,11 +25,13 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductImageGallery(
-    imageUrls: List<String>,
+    imageUrls: ImmutableList<String>,
     pagerState: PagerState,
     modifier: Modifier = Modifier,
 ) {
@@ -96,7 +98,7 @@ private fun ImageGalleryIndicator(
 private fun PreviewProductImageGallery() {
     val dummyUrl =
         "https://image.msscdn.net/thumbnails/images/goods_img/20250918/5486967/5486967_17617819130539_big.jpg?w=1200"
-    val dummyImageList = listOf(dummyUrl, dummyUrl, dummyUrl)
+    val dummyImageList = listOf(dummyUrl, dummyUrl, dummyUrl).toImmutableList()
 
     ProductImageGallery(
         imageUrls = dummyImageList,
