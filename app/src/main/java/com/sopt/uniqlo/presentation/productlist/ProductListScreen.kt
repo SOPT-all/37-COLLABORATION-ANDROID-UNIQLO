@@ -137,7 +137,7 @@ private fun createFilterItems(filterNames: List<String>): ImmutableList<FilterCh
 
 @Preview(showBackground = true)
 @Composable
-fun ProductListRoutePreview() {
+private fun ProductListRoutePreview() {
     UniqloTheme {
         ProductListRoute(paddingValues = PaddingValues(0.dp))
     }
