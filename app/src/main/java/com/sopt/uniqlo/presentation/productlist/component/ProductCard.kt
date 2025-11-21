@@ -2,7 +2,6 @@ package com.sopt.uniqlo.presentation.productlist.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +30,7 @@ import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
+import com.sopt.uniqlo.core.extension.noRippleClickable
 import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
 
 @Composable
@@ -43,7 +43,7 @@ fun ProductCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clickable { onItemClick(product.id) },
+            .noRippleClickable { onItemClick(product.id) },
         verticalArrangement = Arrangement.Center
     ) {
         AsyncImage(
@@ -72,7 +72,7 @@ fun ProductCard(
                     tint = Color.Unspecified,
                     modifier = Modifier
                         .size(22.dp)
-                        .clickable { onFavoriteToggle(product.id) }
+                        .noRippleClickable { onFavoriteToggle(product.id) }
                 )
             }
 

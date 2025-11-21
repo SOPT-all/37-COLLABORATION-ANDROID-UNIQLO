@@ -1,7 +1,6 @@
 package com.sopt.uniqlo.presentation.productlist.component
 
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,6 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
+import com.sopt.uniqlo.core.extension.noRippleClickable
 import com.sopt.uniqlo.presentation.productlist.model.FilterChipModel
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -61,7 +61,7 @@ private fun FilterChip(
 ) {
     Row(
         modifier = modifier
-            .clickable(onClick = onClick)
+            .noRippleClickable (onClick = onClick)
             .border(
                 1.dp,
                 UniqloTheme.colors.gray300,
