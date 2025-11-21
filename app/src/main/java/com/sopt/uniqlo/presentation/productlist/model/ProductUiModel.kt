@@ -20,20 +20,24 @@ data class ProductUiModel(
     val isFavorite: Boolean = false
 )
 
+fun ProductEntity.toUiModel(isFavorite: Boolean) : ProductUiModel {
+    return ProductUiModel(
+        id = this.id,
+        imageUrl = this.imageUrl,
+        colorHexCodes = this.colorHexCodes,
+        genderAndSizeRange = this.genderAndSizeRange,
+        name = this.name,
+        originalPrice = this.originalPrice,
+        salePrice = this.salePrice,
+        productTag = this.productTag,
+        starAverage = this.starAverage,
+        reviewCount = this.reviewCount,
+        isFavorite = isFavorite
+    )
+}
+
 fun List<ProductEntity>.toUiModel(favoriteMap : Map<Long, Boolean>) : PersistentList<ProductUiModel> {
     return map { entity ->
-        ProductUiModel(
-            id = entity.id,
-            imageUrl = entity.imageUrl,
-            colorHexCodes = entity.colorHexCodes,
-            genderAndSizeRange = entity.genderAndSizeRange,
-            name = entity.name,
-            originalPrice = entity.originalPrice,
-            salePrice = entity.salePrice,
-            productTag = entity.productTag,
-            starAverage = entity.starAverage,
-            reviewCount = entity.reviewCount,
-            isFavorite = favoriteMap [entity.id] ?: false
-        )
+        entity.toUiModel(isFavorite = favoriteMap [entity.id] ?: false)
     }.toPersistentList()
  }
