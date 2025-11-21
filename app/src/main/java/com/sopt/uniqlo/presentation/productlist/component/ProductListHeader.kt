@@ -40,15 +40,14 @@ fun ProductListHeader(
 
         Icon(
             painter = painterResource(id = R.drawable.ic_ogrid),
-            contentDescription = null,
-            modifier = modifier
+            contentDescription = null
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun ProductListHeaderPreview() {
+private fun ProductListHeaderPreview() {
     ProductListHeader(
         totalCount = 48
     )
