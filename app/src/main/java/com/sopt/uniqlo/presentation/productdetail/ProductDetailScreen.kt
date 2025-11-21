@@ -69,7 +69,7 @@ fun ProductDetailScreen(
             onColorSelected = { colorOption ->
                 onColorOptionClick(colorOption.name)
             },
-            modifier = Modifier.padding(horizontal = 16.dp, vertical = 20.dp)
+            modifier = Modifier.padding(vertical = 20.dp)
         )
     }
 }
