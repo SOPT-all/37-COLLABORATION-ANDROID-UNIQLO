@@ -17,7 +17,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.R
@@ -81,7 +82,7 @@ private fun FilterChip(
         Spacer(modifier = Modifier.width(4.dp))
 
         Icon(
-            painter = painterResource(id = item.icon),
+            imageVector = ImageVector.vectorResource(id = item.icon),
             contentDescription = null,
             tint = UniqloTheme.colors.black
         )
