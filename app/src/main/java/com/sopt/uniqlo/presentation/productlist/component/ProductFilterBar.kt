@@ -23,10 +23,12 @@ import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.presentation.productlist.model.FilterChipModel
+import kotlinx.collections.immutable.ImmutableList
+import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ProductFilterBar(
-    filterItems: List<FilterChipModel>,
+    filterItems: ImmutableList<FilterChipModel>,
     onFilterItemClick: (FilterChipModel) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -37,7 +39,10 @@ fun ProductFilterBar(
         horizontalArrangement = Arrangement.spacedBy(4.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        items(filterItems, key = { it.name }) { item ->
+        items(
+            items = filterItems,
+            key = { it.id }
+        ) { item ->
             FilterChip(
                 item = item,
                 onClick = { onFilterItemClick(item) }
@@ -89,15 +94,15 @@ private fun ProductFilterBarPreview() {
     val resetIcon = R.drawable.ic_reset
     val downArrowIcon = R.drawable.ic_filter
 
-    val sampleItems = remember {
+    val sampleItems: ImmutableList<FilterChipModel> = remember {
         listOf(
-            FilterChipModel(name = "초기화", icon = resetIcon, isSelected = false),
-            FilterChipModel(name = "인기순", icon = downArrowIcon, isSelected = false),
-            FilterChipModel(name = "카테고리", icon = downArrowIcon, isSelected = false),
-            FilterChipModel(name = "가격", icon = downArrowIcon, isSelected = false),
-            FilterChipModel(name = "색상", icon = downArrowIcon, isSelected = false),
-            FilterChipModel(name = "사이즈", icon = downArrowIcon, isSelected = false),
-        )
+            FilterChipModel(id = 1, name = "초기화", icon = resetIcon, isSelected = false),
+            FilterChipModel(id = 2, name = "인기순", icon = downArrowIcon, isSelected = false),
+            FilterChipModel(id = 3, name = "카테고리", icon = downArrowIcon, isSelected = false),
+            FilterChipModel(id = 4, name = "가격", icon = downArrowIcon, isSelected = false),
+            FilterChipModel(id = 5, name = "색상", icon = downArrowIcon, isSelected = false),
+            FilterChipModel(id = 6, name = "사이즈", icon = downArrowIcon, isSelected = false),
+        ).toImmutableList()
     }
 
     ProductFilterBar(
