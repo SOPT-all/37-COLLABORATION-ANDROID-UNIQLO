@@ -18,11 +18,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
+import com.sopt.uniqlo.core.extension.noRippleClickable
 
 @Composable
 fun IconTextButton(
     @DrawableRes imgResource: Int,
     title: String,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier,
     imgDescription: String? = null,
     iconColor: Color = UniqloTheme.colors.black,
@@ -36,6 +38,9 @@ fun IconTextButton(
                 width = 1.dp,
                 color = UniqloTheme.colors.gray200,
                 shape = CircleShape
+            )
+            .noRippleClickable(
+                onClick = onClick
             )
             .padding(horizontal = 10.dp, vertical = 6.dp)
     ) {
@@ -61,6 +66,7 @@ private fun InquiryButtonPreview() {
     IconTextButton(
         imgResource = R.drawable.ic_inquiry,
         imgDescription = "문의하기 버튼",
-        title = "문의하기"
+        title = "문의하기",
+        onClick = {}
     )
 }
