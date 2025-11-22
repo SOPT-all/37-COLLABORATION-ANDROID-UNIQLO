@@ -4,10 +4,10 @@
     android:viewportWidth="22"
     android:viewportHeight="22">
   <path
-      android:pathData="M8,17L14,10.5L8,4"
+      android:pathData="M4.405,6.011C2.896,7.602 2.896,10.182 4.405,11.773L11,18.727L17.596,11.773C19.105,10.182 19.105,7.602 17.596,6.011C16.087,4.42 13.641,4.42 12.132,6.011L11,7.205L9.869,6.011C8.36,4.42 5.913,4.42 4.405,6.011Z"
       android:strokeLineJoin="round"
-      android:strokeWidth="1.5"
+      android:strokeWidth="1.2"
       android:fillColor="#00000000"
-      android:strokeColor="#949494"
+      android:strokeColor="#000000"
       android:strokeLineCap="round"/>
 </vector>
