@@ -16,12 +16,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
-import retrofit2.http.Url
 
 @Composable
 fun MaterialDetail(
     modifier: Modifier = Modifier,
-    materialImageUrl: Url? = null,
+    materialImageUrl: String? = null,
     materialDescription: String? = null,
     materialText: String = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
 ) {

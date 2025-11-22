@@ -16,6 +16,9 @@ import com.sopt.uniqlo.presentation.detailpage.component.TextWithLeadingIcon
 @Composable
 fun ProductDetailDescription(
     modifier: Modifier = Modifier,
+    descriptionText: List<String> = emptyList(),
+    featureDetailText: List<String> = emptyList(),
+    sizeDetailText: List<String> = emptyList(),
 ) {
     Column(
         modifier = modifier,
@@ -32,12 +35,11 @@ fun ProductDetailDescription(
             modifier = Modifier,
         ) {
             Column {
-                TextWithLeadingIcon(
-                    text = "가디건처럼 걸쳐 입기 좋습니다.",
-                )
-                TextWithLeadingIcon(
-                    text = "쇼트 기장으로 클린한 룩은 물론 캐주얼한 룩으로도 연출할 수 있습니다."
-                )
+                descriptionText.forEach { text ->
+                    TextWithLeadingIcon(
+                        text = text
+                    )
+                }
             }
             Column(
                 modifier = Modifier,
@@ -48,21 +50,13 @@ fun ProductDetailDescription(
                     style = UniqloTheme.typography.body.r_15,
                 )
                 Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = "- 비침: 없음",
-                    color = UniqloTheme.colors.black,
-                    style = UniqloTheme.typography.body.r_13,
-                )
-                Text(
-                    text = "- 핏: 보통 핏(레귤러)",
-                    color = UniqloTheme.colors.black,
-                    style = UniqloTheme.typography.body.r_13,
-                )
-                Text(
-                    text = "- 포켓(주머니): 있음",
-                    color = UniqloTheme.colors.black,
-                    style = UniqloTheme.typography.body.r_13,
-                )
+                featureDetailText.forEach { text ->
+                    Text(
+                        text = "- $text",
+                        color = UniqloTheme.colors.black,
+                        style = UniqloTheme.typography.body.r_13,
+                    )
+                }
             }
             Column(
                 modifier = Modifier,
@@ -82,18 +76,11 @@ fun ProductDetailDescription(
             Column(
                 modifier = Modifier,
             ) {
-                TextWithLeadingIcon(
-                    text = "게재된 이미지에는 판매 예정이 없는 컬러가 포함되어 있을 수 있습니다."
-                )
-                TextWithLeadingIcon(
-                    text = "취급 점포에 따라 상품의 품절 및 판매일 변경 될 수 있습니다."
-                )
-                TextWithLeadingIcon(
-                    text = "모니터사양에 따라 상품의 색상 및 무늬 등이 실제 상품과 다소 차이 날 수 있습니다."
-                )
-                TextWithLeadingIcon(
-                    text = "XS, XXL, 3XL 사이즈는 온라인 스토어에서만 판매합니다."
-                )
+                sizeDetailText.forEach { text ->
+                    TextWithLeadingIcon(
+                        text = text
+                    )
+                }
             }
             Text(
                 text = "이 제품은 동일 제품이라도 Tag에 기재된 제품 정보가 다른 경우가있습니다. 양해 부탁 드리겠습니다.",

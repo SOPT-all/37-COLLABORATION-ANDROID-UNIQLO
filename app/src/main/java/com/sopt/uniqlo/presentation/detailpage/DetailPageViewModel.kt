@@ -13,14 +13,30 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class DetailPageViewModel @Inject constructor(
-    private val getSizeInformationDummyListUseCase: GetSizeInformationDummyListUseCase,
-) : ViewModel() {
-    private val _detailPageUiState = MutableStateFlow(DetailPageUiState())
-    val detailPageUiState: StateFlow<DetailPageUiState> = _detailPageUiState.asStateFlow()
 class DetailPageViewModel @Inject constructor() : ViewModel() {
     private val _uiState = MutableStateFlow(DetailPageUiState())
     val uiState: StateFlow<DetailPageUiState> = _uiState.asStateFlow()
+
+    val detailDescriptionDummyData = DetailDescriptionModel(
+        detailPageUrl = null,
+        detailText = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
+        descriptionText = listOf(
+            "가디건처럼 걸쳐 입기 좋습니다.",
+            "쇼트 기장으로 클린한 룩은 물론 캐주얼한 룩으로도 연출할 수 있습니다."
+        ),
+        featureDetailText = listOf(
+            "비침: 없음",
+            "핏: 보통 핏(레귤러)",
+            "포켓(주머니): 있음"
+        ),
+        sizeDetailText = listOf(
+            "게재된 이미지에는 판매 예정이 없는 컬러가 포함되어 있을 수 있습니다.",
+            "취급 점포에 따라 상품의 품절 및 판매일 변경 될 수 있습니다.",
+            "모니터사양에 따라 상품의 색상 및 무늬 등이 실제 상품과 다소 차이 날 수 있습니다.",
+            "XS, XXL, 3XL 사이즈는 온라인 스토어에서만 판매합니다."
+        )
+    )
+
     val sizeInformationDummyList = listOf(
         SizeInformationItemModel(
             imgResource = R.drawable.img_detail_page_size_chart,
@@ -45,7 +61,18 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
     )
 
     init {
+        setDetailDescriptionDummyData()
         setSizeInformationDummyList()
+    }
+
+    fun setDetailDescriptionDummyData() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    detailDescriptionList = detailDescriptionDummyData
+                )
+            }
+        }
     }
 
     fun setSizeInformationDummyList(){
