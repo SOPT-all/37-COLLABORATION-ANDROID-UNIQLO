@@ -21,6 +21,7 @@ import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.vectorResource
 import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
 
@@ -67,7 +68,7 @@ fun SizeInformationDetail(
         modifier = modifier.fillMaxWidth()
     ) {
         Image(
-            imageVector = ImageVector.vectorResource(id = imgResource),
+            painter = painterResource(id = imgResource),
             contentDescription = imgDescription,
             modifier = Modifier.size(width = 66.dp, height = 64.dp),
         )
