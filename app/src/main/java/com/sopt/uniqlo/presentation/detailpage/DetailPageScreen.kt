@@ -27,19 +27,19 @@ import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
 @Composable
 fun DetailPageRoute(
     modifier: Modifier = Modifier,
-    viewModel: DetailPageViewModel = viewModel(),
+    viewModel: DetailPageViewModel = hiltViewModel(),
 ) {
-    val uiState by viewModel.detailPageUiState.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     DetailPageScreen(
-        detailPageUiState = uiState,
+        uiState = uiState,
         modifier = modifier
     )
 }
 
 @Composable
 fun DetailPageScreen(
-    detailPageUiState: DetailPageUiState,
+    uiState: DetailPageUiState,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -51,20 +51,29 @@ fun DetailPageScreen(
         ) {
             //제품 정보
 
-        //탭바
+            //탭바
 
-        //제품 상세
-        //사이즈 안내
-        item {
-            SizeInformation(
-                sizeInformationList = detailPageUiState.sizeInformationList,
-                modifier = Modifier
-            )
+            //제품 상세
+            item {
+                ProductDetail(
+                    detailDescription = uiState.detailDescriptionList!!
+                )
+                HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
+            }
+            //사이즈 안내
+            item {
+                SizeInformation(
+                    sizeInformationList = uiState.sizeInformationList,
+                )
+                HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
+            }
+            //스타일 힌트
+            item {
+                StyleHint()
+                HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
+            }
+            //리뷰
         }
-        //스타일 힌트
-
-        //리뷰
-
         //바텀바 + 플로팅 버튼
         Box(
             modifier = Modifier
@@ -101,8 +110,8 @@ fun DetailPageScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun DetailPagePreview() {
+private fun DetailPagePreview() {
     DetailPageScreen(
-        detailPageUiState = DetailPageUiState()
+        uiState = DetailPageUiState()
     )
 }
