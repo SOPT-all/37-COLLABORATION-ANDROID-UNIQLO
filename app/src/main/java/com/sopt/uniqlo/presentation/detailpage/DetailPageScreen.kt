@@ -61,7 +61,7 @@ fun DetailPageScreen(
             .padding(paddingValues)
     ) {
         LazyColumn(
-            contentPadding = PaddingValues(bottom = 80.dp),
+            contentPadding = PaddingValues(bottom = 120.dp),
             modifier = Modifier.fillMaxSize(),
         ) {
             //제품 정보
@@ -135,6 +135,7 @@ fun DetailPageScreen(
                         buttonSize = 40
                     )
                 }
+                HorizontalDivider(thickness = 1.dp, color = UniqloTheme.colors.gray100)
                 WishListBar(
                     iconButtonClick = onWishClick,
                     wishListButtonClick = {}
