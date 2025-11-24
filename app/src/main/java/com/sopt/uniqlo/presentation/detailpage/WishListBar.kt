@@ -1,11 +1,10 @@
-package com.sopt.uniqlo.presentation.detailpage.component
+package com.sopt.uniqlo.presentation.detailpage
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -19,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.extension.noRippleClickable
+import com.sopt.uniqlo.presentation.detailpage.component.CircleIconButton
 
 //TODO("하단 바의 이름 생각해보기 -> WishListBar라고 하면 장바구니 목록 들고올 듯한 기분")
 //TODO("애들 크기가 46이 맞나? 그냥 max인데 높이만 46으로 넣은거 아닌가?")
@@ -27,31 +27,25 @@ fun WishListBar(
     iconButtonClick: () -> Unit,
     wishListButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
-    barHeight: Int = 46
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
             .fillMaxWidth()
             .background(color = UniqloTheme.colors.white)
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 20.dp)
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            CircleIconButton(
-                icon = R.drawable.ic_heart,
-                onClick = iconButtonClick,
-                buttonSize = barHeight
-            )
-            Spacer(modifier = Modifier.width(15.dp))
-            WishListButton(
-                onClick = wishListButtonClick,
-                modifier = Modifier.height(barHeight.dp)
-            )
-        }
+        CircleIconButton(
+            icon = R.drawable.ic_heart,
+            onClick = iconButtonClick,
+            buttonSize = 46
+        )
+        Spacer(modifier = Modifier.width(15.dp))
+        WishListButton(
+            onClick = wishListButtonClick,
+        )
     }
+
 }
 
 @Composable
@@ -69,8 +63,9 @@ fun WishListButton(
                 color = buttonColor,
                 shape = CircleShape
             )
+            .padding(11.5.dp)
             .noRippleClickable(
-                onClick
+                onClick = onClick
             )
     ) {
         Text(
