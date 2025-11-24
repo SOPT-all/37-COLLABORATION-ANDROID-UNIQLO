@@ -1,5 +1,6 @@
 package com.sopt.uniqlo.presentation.detailpage
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,31 +22,43 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.presentation.detailpage.component.CircleIconButton
-import com.sopt.uniqlo.presentation.detailpage.component.WishListBar
 import com.sopt.uniqlo.presentation.detailpage.model.DetailDescriptionModel
+import com.sopt.uniqlo.presentation.detailpage.model.ReviewModel
 import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
 import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
 
 @Composable
 fun DetailPageRoute(
-    modifier: Modifier = Modifier,
+    paddingValues: PaddingValues,
     viewModel: DetailPageViewModel = hiltViewModel(),
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     DetailPageScreen(
+        paddingValues = paddingValues,
         uiState = uiState,
-        modifier = modifier
+        onTabSelected = viewModel::setTabState,
+        onStyleHintClick = viewModel::setStyleHintLiked,
+        onReviewHelpfulClick = viewModel::setReviewHelpful,
+        onWishClick = viewModel::setIsWished,
     )
 }
 
 @Composable
 fun DetailPageScreen(
+    paddingValues: PaddingValues,
     uiState: DetailPageUiState,
+    onTabSelected: (TabState) -> Unit,
+    onStyleHintClick: (String) -> Unit,
+    onReviewHelpfulClick: (String, Boolean) -> Unit,
+    onWishClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .background(UniqloTheme.colors.white)
+            .fillMaxSize()
+            .padding(paddingValues)
     ) {
         LazyColumn(
             contentPadding = PaddingValues(bottom = 80.dp),
@@ -54,11 +67,16 @@ fun DetailPageScreen(
             //제품 정보
 
             //탭바
-
+            item {
+                TabBar(
+                    tabState = uiState.tabState,
+                    onTabSelected = onTabSelected
+                )
+            }
             //제품 상세
             item {
                 ProductDetail(
-                    detailDescription = uiState.detailDescriptionList!!
+                    detailDescription = uiState.detailDescription
                 )
                 HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
             }
@@ -71,10 +89,26 @@ fun DetailPageScreen(
             }
             //스타일 힌트
             item {
-                StyleHint()
+                StyleHint(
+                    styleHintList = uiState.styleHintList,
+                    onLikedClick = onStyleHintClick
+                )
                 HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
             }
             //리뷰
+            item {
+                Review(
+                    reviewList = uiState.reviewList,
+                    reviewStarPointAverage = uiState.reviewStarPointAverage,
+                    reviewFitAverage = uiState.reviewFitAverage,
+                    onHelpfulClick = { title, isSelected ->
+                        onReviewHelpfulClick(
+                            title,
+                            isSelected
+                        )
+                    }
+                )
+            }
         }
         //바텀바 + 플로팅 버튼
         Box(
@@ -82,7 +116,7 @@ fun DetailPageScreen(
                 .align(Alignment.BottomCenter)
                 .fillMaxWidth()
         ) {
-            Column{
+            Column {
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
@@ -102,7 +136,7 @@ fun DetailPageScreen(
                     )
                 }
                 WishListBar(
-                    iconButtonClick = {},
+                    iconButtonClick = onWishClick,
                     wishListButtonClick = {}
                 )
             }
@@ -115,8 +149,8 @@ fun DetailPageScreen(
 private fun DetailPagePreview() {
     DetailPageScreen(
         uiState = DetailPageUiState(
-            detailDescriptionList = DetailDescriptionModel(
-                detailPageUrl = null,
+            detailDescription = DetailDescriptionModel(
+                detailPageUrl = "",
                 detailText = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
                 descriptionText = listOf(
                     "가디건처럼 걸쳐 입기 좋습니다.",
@@ -155,7 +189,37 @@ private fun DetailPagePreview() {
                     title = "신장별 스타일링",
                     description = "나와 비슷한 체형의 고객이 착용한 사이즈를 확인해 보세요."
                 )
-            )
-        )
+            ),
+            reviewList = listOf(
+                ReviewModel(
+                    title = "가을 가을합니다",
+                    content = "가을에 매장에서 입어보고 마음에 들어 온라인으로 xs사이즈 구매했는데 적당한 길이감에 단정하게 이쁩니다",
+                    star = 5,
+                    createdAt = "2023/01/01",
+                    height = "170cm",
+                    gender = "남성",
+                    recommend = 10,
+                    size = "M",
+                    color = "빨강",
+                    fit = "정장",
+                ), ReviewModel(
+                    title = "가을 가을합니다",
+                    content = "가을에 매장에서 입어보고 마음에 들어 온라인으로 xs사이즈 구매했는데 적당한 길이감에 단정하게 이쁩니다",
+                    star = 5,
+                    createdAt = "2023/01/01",
+                    height = "170cm",
+                    gender = "남성",
+                    recommend = 10,
+                    size = "M",
+                    color = "빨강",
+                    fit = "정장",
+                )
+            ),
+        ),
+        onTabSelected = {},
+        onStyleHintClick = {},
+        onReviewHelpfulClick = { _, _ -> },
+        onWishClick = {},
+        paddingValues = PaddingValues()
     )
 }
