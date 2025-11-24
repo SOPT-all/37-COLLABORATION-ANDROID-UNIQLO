@@ -18,7 +18,7 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
     val uiState: StateFlow<DetailPageUiState> = _uiState.asStateFlow()
 
     val detailDescriptionDummyData = DetailDescriptionModel(
-        detailPageUrl = null,
+        detailPageUrl = "",
         detailText = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
         descriptionText = listOf(
             "가디건처럼 걸쳐 입기 좋습니다.",
@@ -65,17 +65,70 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
         setSizeInformationDummyList()
     }
 
+    fun setStyleHintLiked(imgUrl: String) {
+        val currentStyleHintList = _uiState.value.styleHintList
+        val updatedStyleHintList = currentStyleHintList.map { styleHint ->
+            if (styleHint.imgUrl == imgUrl) {
+                styleHint.copy(
+                    isLiked = !styleHint.isLiked
+                )
+            } else {
+                styleHint
+            }
+        }
+        _uiState.update {
+            it.copy(
+                styleHintList = updatedStyleHintList
+            )
+        }
+    }
+
+    fun setReviewHelpful(title: String, isHelpful: Boolean) {
+        val currentReviewList = _uiState.value.reviewList
+        val updatedReviewList = currentReviewList.map { review ->
+            if (review.title == title) {
+                review.copy(
+                    isHelpful = isHelpful,
+                    recommend = review.recommend + 1
+                )
+            } else {
+                review
+            }
+        }
+        _uiState.update {
+            it.copy(
+                reviewList = updatedReviewList
+            )
+        }
+    }
+
+    fun setTabState(tabState: TabState) {
+        _uiState.update {
+            it.copy(
+                tabState = tabState
+            )
+        }
+    }
+
+    fun setIsWished() {
+        _uiState.update {
+            it.copy(
+                isWished = !_uiState.value.isWished
+            )
+        }
+    }
+
     fun setDetailDescriptionDummyData() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    detailDescriptionList = detailDescriptionDummyData
+                    detailDescription = detailDescriptionDummyData
                 )
             }
         }
     }
 
-    fun setSizeInformationDummyList(){
+    fun setSizeInformationDummyList() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
