@@ -1,13 +1,13 @@
 package com.sopt.uniqlo.domain.productlist.usecase
 
-import com.sopt.uniqlo.data.productlist.FakeProductRepository
 import com.sopt.uniqlo.domain.productlist.entity.ProductEntity
+import com.sopt.uniqlo.domain.productlist.repository.ProductRepository
 import javax.inject.Inject
 
 class GetProductListUseCase @Inject constructor(
-    private val repository: FakeProductRepository
+    private val productRepository: ProductRepository
 ) {
     suspend operator fun invoke(): Result<List<ProductEntity>> {
-        return repository.getProducts()
+        return productRepository.getProducts()
     }
 }
