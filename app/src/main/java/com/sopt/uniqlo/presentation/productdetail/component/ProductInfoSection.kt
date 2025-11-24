@@ -120,7 +120,7 @@ private fun ColorCircle(
             .size(41.dp)
             .border(
                 width = if (isSelected) 1.dp else 0.dp,
-                color = if (isSelected) UniqloTheme.colors.black else UniqloTheme.colors.white,
+                color = if (isSelected) UniqloTheme.colors.black else Color.Transparent,
                 shape = CircleShape
             )
             .noRippleClickable(onClick = onClick),
