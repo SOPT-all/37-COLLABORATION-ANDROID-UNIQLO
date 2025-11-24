@@ -67,10 +67,10 @@ fun DetailPageScreen(
             //제품 정보
 
             //탭바
-            item {
+            stickyHeader {
                 TabBar(
                     tabState = uiState.tabState,
-                    onTabSelected = onTabSelected
+                    onTabSelected = onTabSelected,
                 )
             }
             //제품 상세
