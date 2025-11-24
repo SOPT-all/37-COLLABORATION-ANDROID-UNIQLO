@@ -203,8 +203,8 @@ private fun ReviewRow(product: ProductUiModel) {
 
         Text(
             text = formattedRating,
-            color = UniqloTheme.colors.gray600,
-            style = UniqloTheme.typography.caption.r_9
+            color = UniqloTheme.colors.black,
+            style = UniqloTheme.typography.caption.l_12
         )
 
         Spacer(modifier = Modifier.width(3.dp))
