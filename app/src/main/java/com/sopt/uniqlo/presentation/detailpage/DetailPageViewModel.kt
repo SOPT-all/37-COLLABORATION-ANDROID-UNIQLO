@@ -4,7 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.presentation.detailpage.model.DetailDescriptionModel
+import com.sopt.uniqlo.presentation.detailpage.model.ReviewModel
 import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
+import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
 import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -60,11 +62,55 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
         )
     )
 
+    val reviewDummyList = listOf(
+        ReviewModel(
+            title = "가을 가을합니다",
+            content = "가을에 매장에서 입어보고 마음에 들어 온라인으로 xs사이즈 구매했는데 적당한 길이감에 단정하게 이쁩니다",
+            star = 5,
+            createdAt = "2023/01/01",
+            height = "170cm",
+            gender = "남성",
+            recommend = 10,
+            size = "M",
+            color = "빨강",
+            fit = "정장",
+        ), ReviewModel(
+            title = "가을 가을합니다!",
+            content = "가을에 매장에서 입어보고 마음에 들어 온라인으로 xs사이즈 구매했는데 적당한 길이감에 단정하게 이쁩니다",
+            star = 5,
+            createdAt = "2023/01/01",
+            height = "선택하지 않음",
+            gender = "선택하지 않음",
+            recommend = 10,
+            size = "M",
+            color = "빨강",
+            fit = "정장",
+        )
+    )
+
+    val styleHintDummyList = listOf(
+        StyleHintModel(
+            imgUrl = "",
+            isLiked = false,
+        ),
+        StyleHintModel(
+            imgUrl = "",
+            isLiked = true,
+        ), StyleHintModel(
+            imgUrl = "",
+            isLiked = true,
+        )
+    )
+
+
     init {
         setDetailDescriptionDummyData()
         setSizeInformationDummyList()
+        setReviewDummyList()
+        setStyleHintDummyList()
     }
 
+    //TODO("아래 두가지 같을 때를 대비해 각각 Url, title 말고 index를 사용하는 방법은 없을까? -> 하나만 바꾸는 식으로 해야하는가")
     fun setStyleHintLiked(imgUrl: String) {
         val currentStyleHintList = _uiState.value.styleHintList
         val updatedStyleHintList = currentStyleHintList.map { styleHint ->
@@ -88,7 +134,7 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
         val updatedReviewList = currentReviewList.map { review ->
             if (review.title == title) {
                 review.copy(
-                    isHelpful = isHelpful,
+                    isHelpful = !isHelpful,
                     recommend = review.recommend + 1
                 )
             } else {
@@ -133,6 +179,26 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
             _uiState.update {
                 it.copy(
                     sizeInformationList = sizeInformationDummyList
+                )
+            }
+        }
+    }
+
+    fun setReviewDummyList() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    reviewList = reviewDummyList
+                )
+            }
+        }
+    }
+
+    fun setStyleHintDummyList() {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    styleHintList = styleHintDummyList
                 )
             }
         }
