@@ -1,7 +1,7 @@
 package com.sopt.uniqlo.presentation.detailpage.model
 
 data class DetailDescriptionModel(
-    val detailPageUrl: String? = null,
+    val detailPageUrl: String = "",
     val detailText: String,
     val descriptionText: List<String>,
     val featureDetailText: List<String>,
