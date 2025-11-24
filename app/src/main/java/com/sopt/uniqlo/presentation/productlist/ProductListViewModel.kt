@@ -43,9 +43,9 @@ class ProductListViewModel @Inject constructor(
         }
         viewModelScope.launch {
             getProductListUseCase()
-                .onSuccess { data ->
+                .onSuccess { productEntities ->
                     _uiState.update { state ->
-                        val uiModels = data.toUiModel(favoriteMap)
+                        val uiModels = productEntities.toUiModel(favoriteMap)
 
                         state.copy(
                             productListState = UiState.Success(uiModels),
@@ -64,9 +64,9 @@ class ProductListViewModel @Inject constructor(
         }
     }
 
-    fun onFavoriteToggle(id: Long){
+    fun onFavoriteToggle(id: Long) {
         val state = _uiState.value.productListState
-        if (state is UiState.Success){
+        if (state is UiState.Success) {
             val isCurrentFavorite = favoriteMap[id] ?: false
             favoriteMap[id] = !isCurrentFavorite
 
