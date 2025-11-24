@@ -21,7 +21,6 @@ import com.sopt.uniqlo.core.extension.noRippleClickable
 import com.sopt.uniqlo.presentation.detailpage.component.CircleIconButton
 
 //TODO("하단 바의 이름 생각해보기 -> WishListBar라고 하면 장바구니 목록 들고올 듯한 기분")
-//TODO("애들 크기가 46이 맞나? 그냥 max인데 높이만 46으로 넣은거 아닌가?")
 @Composable
 fun WishListBar(
     iconButtonClick: () -> Unit,
