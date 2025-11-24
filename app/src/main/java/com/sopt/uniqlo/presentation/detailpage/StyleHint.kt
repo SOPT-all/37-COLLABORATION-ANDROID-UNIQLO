@@ -1,6 +1,5 @@
 package com.sopt.uniqlo.presentation.detailpage
 
-import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -11,7 +10,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material3.Icon
 import com.sopt.uniqlo.R
-
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,10 +20,14 @@ import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
+import com.sopt.uniqlo.core.extension.noRippleClickable
 import com.sopt.uniqlo.presentation.detailpage.component.ReadMoreButton
+import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
 
 @Composable
 fun StyleHint(
+    styleHintList: List<StyleHintModel>,
+    onLikedClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -39,10 +41,14 @@ fun StyleHint(
         )
         Spacer(modifier = Modifier.height(20.dp))
         LazyRow {
-            items(
-                count = 5,
-            ) {
-                StyleHintItem()
+            item {
+                styleHintList.forEach { styleHint ->
+                    StyleHintItem(
+                        imgUrl = styleHint.imgUrl,
+                        isLiked = styleHint.isLiked,
+                        onLikedClick = { onLikedClick(styleHint.imgUrl) }
+                    )
+                }
             }
         }
         Spacer(modifier = Modifier.height(30.dp))
@@ -56,8 +62,9 @@ fun StyleHint(
 
 @Composable
 fun StyleHintItem(
+    onLikedClick: () -> Unit,
     modifier: Modifier = Modifier,
-    @DrawableRes imgResource: Int? = null,
+    imgUrl: String? = null,
     isLiked: Boolean = false,
 ) {
     //TODO("이미지 받으면서 AsyncImage 사용 필요")
@@ -65,7 +72,7 @@ fun StyleHintItem(
         modifier = modifier
             .size(height = 240.dp, width = 148.dp)
             .background(
-                color = if (imgResource == null) UniqloTheme.colors.blueMain else Color.Unspecified
+                color = if (imgUrl.isNullOrBlank()) UniqloTheme.colors.blueMain else Color.Unspecified
             )
     ) {
         Icon(
@@ -80,6 +87,7 @@ fun StyleHintItem(
                 .align(Alignment.TopEnd)
                 .size(36.dp)
                 .padding(4.dp)
+                .noRippleClickable(onLikedClick)
         )
     }
 }
@@ -87,14 +95,30 @@ fun StyleHintItem(
 @Composable
 @Preview(showBackground = true)
 private fun StyleHintPreview() {
-    StyleHint()
+    StyleHint(
+        styleHintList = listOf(
+            StyleHintModel(
+                imgUrl = "",
+                isLiked = false,
+            ),
+            StyleHintModel(
+                imgUrl = "",
+                isLiked = true,
+            ), StyleHintModel(
+                imgUrl = "",
+                isLiked = true,
+            )
+        ),
+        onLikedClick = {}
+    )
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun StyleHintItemPreview() {
     StyleHintItem(
-        imgResource = null
+        imgUrl = "",
+        onLikedClick = {}
     )
 }
 
@@ -102,7 +126,8 @@ private fun StyleHintItemPreview() {
 @Preview(showBackground = true)
 private fun StyleHintItemIsLikedPreview() {
     StyleHintItem(
-        imgResource = null,
-        isLiked = true
+        imgUrl = null,
+        isLiked = true,
+        onLikedClick = {}
     )
 }
