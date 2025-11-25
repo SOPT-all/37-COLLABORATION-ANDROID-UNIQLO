@@ -44,6 +44,7 @@ fun ProductDetailRoute(
             ProductDetailScreen(
                 paddingValues = paddingValues,
                 uiState = state.data,
+                selectedColorName = uiState.selectedColorName,
                 onColorOptionClick = viewModel::handleColorOptionClick,
                 modifier = modifier
             )
@@ -87,12 +88,11 @@ fun ProductDetailRoute(
 fun ProductDetailScreen(
     paddingValues: PaddingValues,
     uiState: ProductInfoUiModel,
+    selectedColorName: String,
     onColorOptionClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val pagerState = rememberPagerState(pageCount = { uiState.imageUrls.size })
-
-    val selectedColorName = uiState.colorName
 
     Column(
         modifier = modifier
@@ -140,6 +140,7 @@ private fun PreviewProductDetailScreen() {
         ProductDetailScreen(
             uiState = dummyProduct,
             onColorOptionClick = {},
+            selectedColorName = "09 BLACK",
             paddingValues = PaddingValues()
         )
     }
