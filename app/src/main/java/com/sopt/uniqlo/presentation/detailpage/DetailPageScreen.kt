@@ -89,13 +89,20 @@ fun DetailPageScreen(
             if (listState.isScrollInProgress) {
                 return@derivedStateOf uiState.tabState
             }
+
             val firstVisibleItemIndex = listState.firstVisibleItemIndex
-            TabState.entries
-                .reversed()
-                .firstOrNull { tab ->
-                    val tabIndex = tabStartIndices[tab] ?: Int.MAX_VALUE
-                    tabIndex <= firstVisibleItemIndex
-                } ?: TabState.TOP
+
+            val tabsInDescendingOrder = listOf(
+                TabState.REVIEW,
+                TabState.STYLE,
+                TabState.SIZE,
+                TabState.DETAIL
+            )
+
+            tabsInDescendingOrder.firstOrNull { tab ->
+                val tabStartIndex = tabStartIndices[tab] ?: Int.MAX_VALUE
+                tabStartIndex <= firstVisibleItemIndex
+            } ?: TabState.TOP
         }
     }
 
