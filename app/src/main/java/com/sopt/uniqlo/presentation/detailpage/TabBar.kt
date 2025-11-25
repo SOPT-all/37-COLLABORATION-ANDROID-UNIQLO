@@ -16,6 +16,9 @@ import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.extension.noRippleClickable
 
 enum class TabState(val title: String) {
+    TOP(
+        title = "top"
+    ),
     DETAIL(
         title = "제품 상세",
     ),
@@ -32,23 +35,25 @@ enum class TabState(val title: String) {
 
 @Composable
 fun TabBar(
-    tabState: TabState = TabState.DETAIL,
+    tabState: TabState = TabState.TOP,
     onTabSelected: (TabState) -> Unit
 ) {
+    val displayTab = if(tabState == TabState.TOP) TabState.DETAIL else tabState
+
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        TabState.entries.forEach { state ->
+        TabState.entries.filter { it != TabState.TOP }.forEach { state ->
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth()
                     .background(
-                        color = if (tabState == state) UniqloTheme.colors.white else UniqloTheme.colors.gray100
+                        color = if (displayTab == state) UniqloTheme.colors.white else UniqloTheme.colors.gray100
                     )
                     .padding(vertical = 14.dp)
                     .noRippleClickable(
@@ -57,7 +62,7 @@ fun TabBar(
             ) {
                 Text(
                     text = state.title,
-                    color = if (tabState == state) UniqloTheme.colors.black else UniqloTheme.colors.gray400,
+                    color = if (displayTab == state) UniqloTheme.colors.black else UniqloTheme.colors.gray400,
                     style = UniqloTheme.typography.caption.m_12,
                 )
             }

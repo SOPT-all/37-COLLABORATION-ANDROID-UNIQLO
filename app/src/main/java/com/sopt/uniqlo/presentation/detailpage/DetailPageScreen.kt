@@ -131,7 +131,9 @@ fun DetailPageScreen(
                     )
                     CircleIconButton(
                         icon = R.drawable.ic_arrow_up,
-                        onClick = {},
+                        onClick = {
+                            onTabSelected(TabState.TOP)
+                        },
                         buttonSize = 40
                     )
                 }

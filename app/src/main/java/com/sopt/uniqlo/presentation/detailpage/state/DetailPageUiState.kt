@@ -7,7 +7,7 @@ import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
 import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
 
 data class DetailPageUiState (
-    val tabState: TabState = TabState.DETAIL,
+    val tabState: TabState = TabState.TOP,
     val detailDescription: DetailDescriptionModel = DetailDescriptionModel(
         detailPageUrl = "",
         detailText = "",
