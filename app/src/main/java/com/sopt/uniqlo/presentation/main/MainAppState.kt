@@ -8,11 +8,11 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
-import com.sopt.uniqlo.presentation.productdetail.navigation.navigateToProductDetail
 import com.sopt.uniqlo.presentation.category.navigation.navigateCategory
 import com.sopt.uniqlo.presentation.home.navigation.Home
 import com.sopt.uniqlo.presentation.home.navigation.navigateHome
 import com.sopt.uniqlo.presentation.mypage.navigation.navigateMyPage
+import com.sopt.uniqlo.presentation.productdetail.navigation.navigateToProductDetail
 import com.sopt.uniqlo.presentation.wishlist.navigation.navigateWishList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
