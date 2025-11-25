@@ -119,12 +119,6 @@ fun DetailPageScreen(
             modifier = Modifier.fillMaxSize(),
         ) {
             //제품 정보
-            item {
-                ProductDetail(
-                    detailDescription = uiState.detailDescription
-                )
-                HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
-            }
             //탭바
             stickyHeader {
                 TabBar(
