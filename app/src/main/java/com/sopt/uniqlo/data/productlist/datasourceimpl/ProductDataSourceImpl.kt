@@ -1,6 +1,7 @@
 package com.sopt.uniqlo.data.productlist.datasourceimpl
 
 import com.sopt.uniqlo.data.productlist.datasource.ProductDataSource
+import com.sopt.uniqlo.data.productlist.dto.ProductDetailResponseDto
 import com.sopt.uniqlo.data.productlist.dto.ProductResponseDto
 import com.sopt.uniqlo.data.productlist.service.ProductService
 import javax.inject.Inject
@@ -10,5 +11,9 @@ class ProductDataSourceImpl @Inject constructor(
 ) : ProductDataSource {
     override suspend fun getProducts(): List<ProductResponseDto> {
         return productService.getProducts().data ?: emptyList()
+    }
+
+    override suspend fun getProductDetail(productId: Long): ProductDetailResponseDto {
+        return productService.getProductDetail(productId).data ?: throw IllegalStateException("Product detail data is null")
     }
 }
