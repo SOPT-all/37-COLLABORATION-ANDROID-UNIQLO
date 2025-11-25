@@ -27,6 +27,8 @@ import com.sopt.uniqlo.presentation.main.component.MainBottomBar
 import com.sopt.uniqlo.core.designsystem.component.UniqloTopbar
 import com.sopt.uniqlo.presentation.category.navigation.categoryGraph
 import com.sopt.uniqlo.presentation.dummy.navigation.dummyGraph
+import com.sopt.uniqlo.presentation.productdetail.navigation.productDetailGraph
+import com.sopt.uniqlo.presentation.productlist.navigation.productListGraph
 import com.sopt.uniqlo.presentation.home.navigation.homeGraph
 import com.sopt.uniqlo.presentation.mypage.navigation.myPageGraph
 import com.sopt.uniqlo.presentation.wishlist.navigation.wishListGraph
@@ -120,6 +122,15 @@ fun MainScreen(
             myPageGraph(
                 paddingValues = innerPadding,
                 navigateUp = appState::navigateUp
+            )
+
+            productListGraph(
+                paddingValues = innerPadding,
+                navigateToDetail = appState::navigateToProductDetail
+            )
+
+            productDetailGraph(
+                paddingValues = innerPadding
             )
         }
     }

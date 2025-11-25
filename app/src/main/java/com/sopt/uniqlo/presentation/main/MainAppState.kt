@@ -8,6 +8,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
+import com.sopt.uniqlo.presentation.productdetail.navigation.navigateToProductDetail
 import com.sopt.uniqlo.presentation.category.navigation.navigateCategory
 import com.sopt.uniqlo.presentation.home.navigation.Home
 import com.sopt.uniqlo.presentation.home.navigation.navigateHome
@@ -60,6 +61,10 @@ class MainAppState(
             started = SharingStarted.WhileSubscribed(5000),
             initialValue = false
         )
+
+    fun navigateToProductDetail(productId: Long) {
+        navController.navigateToProductDetail(productId)
+    }
 
     fun navigate(tab: MainTab) {
         val navOptions = navOptions {
