@@ -36,14 +36,14 @@ import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
 @Composable
 fun ProductCard(
     product: ProductUiModel,
-    onItemClick: (Long) -> Unit,
+    onProductClick: (Long) -> Unit,
     onFavoriteToggle: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickable { onItemClick(product.id) },
+            .noRippleClickable { onProductClick(product.id) },
         verticalArrangement = Arrangement.Center
     ) {
         AsyncImage(
@@ -252,13 +252,13 @@ private fun ProductCardPreview() {
         Row() {
             ProductCard(
                 product = sampleProductSale,
-                onItemClick = {},
+                onProductClick = {},
                 onFavoriteToggle = { _ -> },
                 modifier = Modifier.weight(1f)
             )
             ProductCard(
                 product = sampleProductNormal,
-                onItemClick = {},
+                onProductClick = {},
                 onFavoriteToggle = { _ -> },
                 modifier = Modifier.weight(1f)
             )
