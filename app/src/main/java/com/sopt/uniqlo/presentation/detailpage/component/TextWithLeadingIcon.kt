@@ -38,7 +38,6 @@ fun TextWithLeadingIcon(
             text = text,
             color = textColor,
             style = UniqloTheme.typography.body.r_13,
-            modifier = Modifier,
         )
     }
 }

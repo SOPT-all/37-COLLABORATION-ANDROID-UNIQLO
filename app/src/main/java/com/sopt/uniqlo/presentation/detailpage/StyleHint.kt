@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import com.sopt.uniqlo.R
 import androidx.compose.material3.Text
@@ -41,14 +42,14 @@ fun StyleHint(
         )
         Spacer(modifier = Modifier.height(20.dp))
         LazyRow {
-            item {
-                styleHintList.forEach { styleHint ->
-                    StyleHintItem(
-                        imgUrl = styleHint.imgUrl,
-                        isLiked = styleHint.isLiked,
-                        onLikedClick = { onLikedClick(styleHint.imgUrl) }
-                    )
-                }
+            items(
+                items = styleHintList
+            ) { styleHint ->
+                StyleHintItem(
+                    imgUrl = styleHint.imgUrl,
+                    isLiked = styleHint.isLiked,
+                    onLikedClick = { onLikedClick(styleHint.imgUrl) }
+                )
             }
         }
         Spacer(modifier = Modifier.height(30.dp))
@@ -61,7 +62,7 @@ fun StyleHint(
 }
 
 @Composable
-fun StyleHintItem(
+private fun StyleHintItem(
     onLikedClick: () -> Unit,
     modifier: Modifier = Modifier,
     imgUrl: String? = null,

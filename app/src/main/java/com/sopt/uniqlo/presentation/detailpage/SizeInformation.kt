@@ -56,7 +56,7 @@ fun SizeInformation(
 }
 
 @Composable
-fun SizeInformationDetail(
+private fun SizeInformationDetail(
     @DrawableRes imgResource: Int,
     title: String,
     description: String,

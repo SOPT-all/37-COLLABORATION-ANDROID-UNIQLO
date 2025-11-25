@@ -29,6 +29,7 @@ import com.sopt.uniqlo.presentation.detailpage.component.CircleIconButton
 import com.sopt.uniqlo.presentation.detailpage.model.DetailDescriptionModel
 import com.sopt.uniqlo.presentation.detailpage.model.ReviewModel
 import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
+import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
 import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
 
 @Composable
@@ -230,6 +231,16 @@ private fun DetailPagePreview() {
                     "모니터사양에 따라 상품의 색상 및 무늬 등이 실제 상품과 다소 차이 날 수 있습니다.",
                     "XS, XXL, 3XL 사이즈는 온라인 스토어에서만 판매합니다."
                 )
+            ),
+            styleHintList = listOf(
+                StyleHintModel(
+                    imgUrl = "",
+                    isLiked = false,
+                ),
+                StyleHintModel(
+                    imgUrl = "",
+                    isLiked = false,
+                ),
             ),
             sizeInformationList = listOf(
                 SizeInformationItemModel(
