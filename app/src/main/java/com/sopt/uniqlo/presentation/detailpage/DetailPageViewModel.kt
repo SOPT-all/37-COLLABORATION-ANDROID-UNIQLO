@@ -20,7 +20,7 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
     val uiState: StateFlow<DetailPageUiState> = _uiState.asStateFlow()
 
     val detailDescriptionDummyData = DetailDescriptionModel(
-        detailPageUrl = "",
+        detailPageUrl = emptyList(),
         detailText = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
         descriptionText = listOf(
             "가디건처럼 걸쳐 입기 좋습니다.",
