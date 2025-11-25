@@ -9,7 +9,7 @@ import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
 data class DetailPageUiState (
     val tabState: TabState = TabState.TOP,
     val detailDescription: DetailDescriptionModel = DetailDescriptionModel(
-        detailPageUrl = "",
+        detailPageUrl = emptyList(),
         detailText = "",
         descriptionText = emptyList(),
         featureDetailText = emptyList(),

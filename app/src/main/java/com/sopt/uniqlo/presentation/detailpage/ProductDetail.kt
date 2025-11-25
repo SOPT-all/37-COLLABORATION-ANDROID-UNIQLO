@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -37,7 +36,7 @@ fun ProductDetail(
             .padding(top = 30.dp, bottom = 12.dp),
     ) {
         MaterialDetail(
-            materialImageUrl = detailDescription.detailPageUrl,
+            materialImageUrl = detailDescription.detailPageUrl.firstOrNull(),
             materialDescription = null,
             materialText = detailDescription.detailText
         )
@@ -90,7 +89,6 @@ private fun MaterialDetail(
                         contentDescription = materialDescription,
                         contentScale = ContentScale.Crop,
                         modifier = Modifier
-                            .fillMaxSize()
                             .size(width = 160.dp, height = 160.dp)
                     )
                 }
@@ -242,7 +240,7 @@ private fun Inquiry(
 private fun ProductDetailPreview() {
     ProductDetail(
         detailDescription = DetailDescriptionModel(
-            detailPageUrl = "",
+            detailPageUrl = emptyList(),
             detailText = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
             descriptionText = listOf(
                 "가디건처럼 걸쳐 입기 좋습니다.",

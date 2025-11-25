@@ -153,7 +153,7 @@ private fun DetailPagePreview() {
     DetailPageScreen(
         uiState = DetailPageUiState(
             detailDescription = DetailDescriptionModel(
-                detailPageUrl = "",
+                detailPageUrl = emptyList(),
                 detailText = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
                 descriptionText = listOf(
                     "가디건처럼 걸쳐 입기 좋습니다.",
