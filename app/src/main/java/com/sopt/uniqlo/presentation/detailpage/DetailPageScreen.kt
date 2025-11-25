@@ -268,7 +268,7 @@ private fun DetailPagePreview() {
                 ReviewModel(
                     title = "가을 가을합니다",
                     content = "가을에 매장에서 입어보고 마음에 들어 온라인으로 xs사이즈 구매했는데 적당한 길이감에 단정하게 이쁩니다",
-                    star = 5,
+                    star = 5f,
                     createdAt = "2023/01/01",
                     height = "170cm",
                     gender = "남성",
@@ -279,7 +279,7 @@ private fun DetailPagePreview() {
                 ), ReviewModel(
                     title = "가을 가을합니다",
                     content = "가을에 매장에서 입어보고 마음에 들어 온라인으로 xs사이즈 구매했는데 적당한 길이감에 단정하게 이쁩니다",
-                    star = 5,
+                    star = 5f,
                     createdAt = "2023/01/01",
                     height = "170cm",
                     gender = "남성",

@@ -3,7 +3,7 @@ package com.sopt.uniqlo.presentation.detailpage.model
 data class ReviewModel(
     val title: String,
     val content: String,
-    val star: Int,
+    val star: Float,
     val createdAt: String,
     val height: String,
     val gender: String,
