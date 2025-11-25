@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -54,6 +57,34 @@ fun DetailPageScreen(
     onWishClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val listState = rememberLazyListState()
+
+    val tabStartIndices = remember {
+        mapOf(
+            TabState.TOP to 0,
+            TabState.DETAIL to 2,
+            TabState.SIZE to 3,
+            TabState.STYLE to 4,
+            TabState.REVIEW to 5,
+        )
+    }
+
+    LaunchedEffect(uiState.tabState) {
+        if (!listState.isScrollInProgress) {
+            val targetIndex = tabStartIndices[uiState.tabState] ?: 0
+            val currentIndex = listState.firstVisibleItemIndex
+
+            if (currentIndex != targetIndex) {
+                listState.animateScrollToItem(
+                    index = targetIndex,
+                    scrollOffset = 0
+                )
+            }
+        }
+    }
+
+
+
     Box(
         modifier = modifier
             .background(UniqloTheme.colors.white)
@@ -61,6 +92,7 @@ fun DetailPageScreen(
             .padding(paddingValues)
     ) {
         LazyColumn(
+            state = listState,
             contentPadding = PaddingValues(bottom = 120.dp),
             modifier = Modifier.fillMaxSize(),
         ) {
