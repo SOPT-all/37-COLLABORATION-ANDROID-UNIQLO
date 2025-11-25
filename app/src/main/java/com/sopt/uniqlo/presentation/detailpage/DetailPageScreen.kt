@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -83,7 +84,28 @@ fun DetailPageScreen(
         }
     }
 
+    val currentTab by remember {
+        derivedStateOf {
+            if (listState.isScrollInProgress) {
+                return@derivedStateOf uiState.tabState
+            }
+            val firstVisibleItemIndex = listState.firstVisibleItemIndex
+            TabState.entries
+                .reversed()
+                .firstOrNull { tab ->
+                    val tabIndex = tabStartIndices[tab] ?: Int.MAX_VALUE
+                    tabIndex <= firstVisibleItemIndex
+                } ?: TabState.TOP
+        }
+    }
 
+    LaunchedEffect(currentTab) {
+        if (!listState.isScrollInProgress &&
+            currentTab != uiState.tabState
+        ) {
+            onTabSelected(currentTab)
+        }
+    }
 
     Box(
         modifier = modifier
@@ -97,7 +119,12 @@ fun DetailPageScreen(
             modifier = Modifier.fillMaxSize(),
         ) {
             //제품 정보
-
+            item {
+                ProductDetail(
+                    detailDescription = uiState.detailDescription
+                )
+                HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
+            }
             //탭바
             stickyHeader {
                 TabBar(
