@@ -1,5 +1,6 @@
 package com.sopt.uniqlo.presentation.detailpage
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,7 +13,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.pager.PagerState
+import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
@@ -20,29 +25,34 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
+import com.sopt.uniqlo.core.util.UiState
 import com.sopt.uniqlo.presentation.detailpage.component.CircleIconButton
+import com.sopt.uniqlo.presentation.detailpage.component.ProductImageGallery
+import com.sopt.uniqlo.presentation.detailpage.component.ProductInfoSection
 import com.sopt.uniqlo.presentation.detailpage.model.DetailDescriptionModel
+import com.sopt.uniqlo.presentation.detailpage.model.ProductInfoUiModel
 import com.sopt.uniqlo.presentation.detailpage.model.ReviewModel
 import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
 import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
 import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
+import com.sopt.uniqlo.presentation.detailpage.state.ProductDetailSideEffect
 
 @Composable
 fun DetailPageRoute(
     paddingValues: PaddingValues,
-    id: Int,
     viewModel: DetailPageViewModel = hiltViewModel(),
 ) {
-
-    LaunchedEffect(Unit) {
-        viewModel.setProductId(id)
-    }
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -65,20 +75,6 @@ fun DetailPageRoute(
         TabState.DETAIL
     )
 
-    LaunchedEffect(uiState.tabState) {
-        if (!listState.isScrollInProgress) {
-            val targetIndex = tabStartIndices[uiState.tabState] ?: 0
-            val currentIndex = listState.firstVisibleItemIndex
-
-            if (currentIndex != targetIndex) {
-                listState.animateScrollToItem(
-                    index = targetIndex,
-                    scrollOffset = 0
-                )
-            }
-        }
-    }
-
     val currentTab by remember {
         derivedStateOf {
             if (listState.isScrollInProgress) {
@@ -94,6 +90,20 @@ fun DetailPageRoute(
         }
     }
 
+    LaunchedEffect(uiState.tabState) {
+        if (!listState.isScrollInProgress) {
+            val targetIndex = tabStartIndices[uiState.tabState] ?: 0
+            val currentIndex = listState.firstVisibleItemIndex
+
+            if (currentIndex != targetIndex) {
+                listState.animateScrollToItem(
+                    index = targetIndex,
+                    scrollOffset = 0
+                )
+            }
+        }
+    }
+
     LaunchedEffect(currentTab) {
         if (!listState.isScrollInProgress &&
             currentTab != uiState.tabState
@@ -103,26 +113,74 @@ fun DetailPageRoute(
     }
 
 
-    DetailPageScreen(
-        paddingValues = paddingValues,
-        uiState = uiState,
-        listState = listState,
-        onTabSelected = viewModel::setTabState,
-        onStyleHintClick = viewModel::setStyleHintLiked,
-        onReviewHelpfulClick = viewModel::setReviewHelpful,
-        onWishClick = viewModel::setIsWished,
-    )
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is ProductDetailSideEffect.ShowToast -> {
+                        Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
+
+    when (val state = uiState.productDetailUiState) {
+        is UiState.Success -> {
+            val pagerState = rememberPagerState(pageCount = { state.data.imageUrls.size })
+
+            DetailPageScreen(
+                paddingValues = paddingValues,
+                uiState = uiState,
+                productDetailUiState = state.data,
+                listState = listState,
+                pagerState = pagerState,
+                onTabSelected = viewModel::setTabState,
+                onStyleHintClick = viewModel::setStyleHintLiked,
+                onReviewHelpfulClick = viewModel::setReviewHelpful,
+                onWishClick = viewModel::setIsWished,
+                onColorOptionClick = viewModel::handleColorOptionClick,
+            )
+        }
+
+        is UiState.Loading -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is UiState.Failure -> {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "상품 정보를 불러오지 못했습니다.")
+            }
+        }
+
+        else -> {}
+    }
 }
 
 @Composable
 fun DetailPageScreen(
     paddingValues: PaddingValues,
     uiState: DetailPageUiState,
+    productDetailUiState: ProductInfoUiModel,
     listState: LazyListState,
+    pagerState: PagerState,
     onTabSelected: (TabState) -> Unit,
     onStyleHintClick: (Int) -> Unit,
     onReviewHelpfulClick: (Int, Boolean) -> Unit,
     onWishClick: () -> Unit,
+    onColorOptionClick: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Box(
@@ -138,8 +196,31 @@ fun DetailPageScreen(
         ) {
             //제품 정보
             item {
-
+                // 1. 상품 이미지 갤러리
+                ProductImageGallery(
+                    imageUrls = productDetailUiState.imageUrls,
+                    pagerState = pagerState,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
+
+            item {
+                // 2. 상품 정보 섹션
+                ProductInfoSection(
+                    name = productDetailUiState.name,
+                    productNumber = productDetailUiState.productNumber,
+                    price = productDetailUiState.price,
+                    rating = productDetailUiState.rating,
+                    reviewCount = productDetailUiState.reviewCount,
+                    colorOptions = productDetailUiState.colorOptions,
+                    selectedColor = uiState.selectedColorName,
+                    onColorSelected = { colorOption ->
+                        onColorOptionClick(colorOption.name)
+                    },
+                    modifier = Modifier.padding(vertical = 20.dp)
+                )
+            }
+
             //탭바
             stickyHeader {
                 TabBar(
@@ -308,6 +389,11 @@ private fun DetailPagePreview() {
         onStyleHintClick = {},
         onReviewHelpfulClick = { _, _ -> },
         onWishClick = {},
-        paddingValues = PaddingValues()
+        paddingValues = PaddingValues(),
+        pagerState = rememberPagerState(initialPage = 0, pageCount = {
+            0
+        }),
+        productDetailUiState = ProductInfoUiModel(),
+        onColorOptionClick = {}
     )
 }

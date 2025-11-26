@@ -18,14 +18,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
-import com.sopt.uniqlo.presentation.main.component.MainBottomBar
 import com.sopt.uniqlo.core.designsystem.component.UniqloTopbar
 import com.sopt.uniqlo.presentation.category.navigation.categoryGraph
+import com.sopt.uniqlo.presentation.detailpage.navigation.detailPageGraph
 import com.sopt.uniqlo.presentation.dummy.navigation.dummyGraph
-import com.sopt.uniqlo.presentation.productdetail.navigation.productDetailGraph
-import com.sopt.uniqlo.presentation.productlist.navigation.productListGraph
 import com.sopt.uniqlo.presentation.home.navigation.homeGraph
+import com.sopt.uniqlo.presentation.main.component.MainBottomBar
 import com.sopt.uniqlo.presentation.mypage.navigation.myPageGraph
+import com.sopt.uniqlo.presentation.productlist.navigation.productListGraph
 import com.sopt.uniqlo.presentation.wishlist.navigation.wishListGraph
 import kotlinx.collections.immutable.toPersistentList
 
@@ -106,7 +106,7 @@ fun MainScreen(
 
             categoryGraph(
                 paddingValues = innerPadding,
-                navigateUp = appState::navigateUp
+                navigateToProductList = appState::navigateToProductList
             )
 
             wishListGraph(
@@ -124,8 +124,9 @@ fun MainScreen(
                 navigateToDetail = appState::navigateToProductDetail
             )
 
-            productDetailGraph(
-                paddingValues = innerPadding
+            detailPageGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
             )
         }
     }
