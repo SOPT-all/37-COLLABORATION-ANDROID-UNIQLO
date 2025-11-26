@@ -111,10 +111,10 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
     }
 
     //TODO("아래 두가지 같을 때를 대비해 각각 Url, title 말고 index를 사용하는 방법은 없을까? -> 하나만 바꾸는 식으로 해야하는가")
-    fun setStyleHintLiked(imgUrl: String) {
+    fun setStyleHintLiked(id: Int) {
         val currentStyleHintList = _uiState.value.styleHintList
         val updatedStyleHintList = currentStyleHintList.map { styleHint ->
-            if (styleHint.imgUrl == imgUrl) {
+            if (styleHint.id == id) {
                 styleHint.copy(
                     isLiked = !styleHint.isLiked
                 )
@@ -129,10 +129,10 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setReviewHelpful(title: String, isHelpful: Boolean) {
+    fun setReviewHelpful(id: Int, isHelpful: Boolean) {
         val currentReviewList = _uiState.value.reviewList
         val updatedReviewList = currentReviewList.map { review ->
-            if (review.title == title) {
+            if (review.id == id) {
                 review.copy(
                     isHelpful = !isHelpful,
                     recommend = review.recommend + 1

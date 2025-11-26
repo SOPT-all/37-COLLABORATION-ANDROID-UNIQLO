@@ -1,6 +1,7 @@
 package com.sopt.uniqlo.presentation.detailpage.model
 
 data class ReviewModel(
+    val id: Int = 0,
     val title: String,
     val content: String,
     val star: Float,
