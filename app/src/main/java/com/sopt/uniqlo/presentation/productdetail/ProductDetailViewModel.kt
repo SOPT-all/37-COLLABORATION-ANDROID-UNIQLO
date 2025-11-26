@@ -3,9 +3,11 @@ package com.sopt.uniqlo.presentation.productdetail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.sopt.uniqlo.core.util.UiState
 import com.sopt.uniqlo.domain.productdetail.usecase.GetProductDetailUseCase
 import com.sopt.uniqlo.presentation.productdetail.model.toUiModel
+import com.sopt.uniqlo.presentation.productdetail.navigation.ProductDetail
 import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailSideEffect
 import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,7 +32,7 @@ class ProductDetailViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<ProductDetailSideEffect>()
     val sideEffect: SharedFlow<ProductDetailSideEffect> = _sideEffect.asSharedFlow()
 
-    private val productId: Int = savedStateHandle["productId"] ?: 1
+    private val productId: Int = savedStateHandle.toRoute<ProductDetail>().productId
 
     init {
         loadProductDetail(productId)
