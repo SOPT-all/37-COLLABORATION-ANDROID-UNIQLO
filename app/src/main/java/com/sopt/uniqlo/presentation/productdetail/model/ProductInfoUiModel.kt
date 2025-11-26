@@ -1,6 +1,7 @@
 package com.sopt.uniqlo.presentation.productdetail.model
 
 import androidx.compose.ui.graphics.Color
+import com.sopt.uniqlo.core.extension.toComposeColor
 import com.sopt.uniqlo.domain.productdetail.entity.ProductDetailEntity
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
@@ -45,8 +46,4 @@ fun ProductDetailEntity.toUiModel() : ProductInfoUiModel {
         rating = this.starAverage,
         reviewCount = this.reviewCount
     )
-}
-
-fun String.toComposeColor(): Color {
-    return Color(android.graphics.Color.parseColor(this))
 }
