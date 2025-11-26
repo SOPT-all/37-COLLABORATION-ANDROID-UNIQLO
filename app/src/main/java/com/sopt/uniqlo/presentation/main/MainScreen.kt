@@ -3,21 +3,38 @@ package com.sopt.uniqlo.presentation.main
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
-import com.sopt.dive.presentation.main.component.MainBottomBar
+import com.sopt.uniqlo.presentation.main.component.MainBottomBar
+import com.sopt.uniqlo.core.designsystem.component.UniqloTopbar
+import com.sopt.uniqlo.presentation.category.navigation.categoryGraph
 import com.sopt.uniqlo.presentation.dummy.navigation.dummyGraph
+import com.sopt.uniqlo.presentation.home.navigation.homeGraph
+import com.sopt.uniqlo.presentation.mypage.navigation.myPageGraph
+import com.sopt.uniqlo.presentation.wishlist.navigation.wishListGraph
 import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun MainScreen(
+    modifier: Modifier = Modifier,
     appState: MainAppState = rememberMainAppState(),
 ) {
     val isBottomBarVisible by appState.isBottomBarVisible.collectAsStateWithLifecycle()
@@ -25,14 +42,29 @@ fun MainScreen(
 
     Scaffold(
         bottomBar = {
-            MainBottomBar(
-                isVisible = isBottomBarVisible,
-                tabs = MainTab.entries.toPersistentList(),
-                currentTab = currentTab,
-                onTabSelected = appState::navigate
-            )
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .navigationBarsPadding()
+                    .shadow(
+                        elevation = 24.dp,
+                    )
+                    .background(
+                        color = Color.White,
+                    )
+            ) {
+                MainBottomBar(
+                    isVisible = isBottomBarVisible,
+                    tabs = MainTab.entries.toPersistentList(),
+                    currentTab = currentTab,
+                    onTabSelected = appState::navigate
+                )
+            }
         },
-        modifier = Modifier
+        topBar = {
+            UniqloTopbar()
+        },
+        modifier = modifier
             .fillMaxSize()
             .navigationBarsPadding()
             .statusBarsPadding()
@@ -66,6 +98,26 @@ fun MainScreen(
             startDestination = appState.startDestination
         ) {
             dummyGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
+            )
+
+            homeGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
+            )
+
+            categoryGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
+            )
+
+            wishListGraph(
+                paddingValues = innerPadding,
+                navigateUp = appState::navigateUp
+            )
+
+            myPageGraph(
                 paddingValues = innerPadding,
                 navigateUp = appState::navigateUp
             )

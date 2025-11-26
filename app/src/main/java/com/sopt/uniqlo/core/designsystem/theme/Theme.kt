@@ -1,19 +1,25 @@
 package com.sopt.uniqlo.core.designsystem.theme
 
-import android.app.Activity
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.ReadOnlyComposable
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.staticCompositionLocalOf
-import androidx.compose.ui.platform.LocalView
-import androidx.core.view.WindowCompat
 
 val localUniqloColors = staticCompositionLocalOf { defaultUniqloColors }
 
 val localUniqloTypography = staticCompositionLocalOf { defaultUniqloTypography }
+
+private val lightColorScheme = lightColorScheme(
+    primary = Black,
+    background = White,
+    surface = White,
+    onPrimary = White,
+    onBackground = Black,
+    onSurface = Black
+)
 
 object UniqloTheme {
     val colors: UniqloColors
@@ -49,16 +55,8 @@ fun UniqloTheme(
         colors = defaultUniqloColors,
         typography = defaultUniqloTypography
     ) {
-        val view = LocalView.current
-        if (!view.isInEditMode) {
-            SideEffect {
-                (view.context as Activity).window.run {
-                    WindowCompat.getInsetsController(this, view).isAppearanceLightStatusBars = !darkTheme
-                }
-            }
-        }
-
         MaterialTheme(
+            colorScheme = lightColorScheme,
             content = content
         )
     }

@@ -1,4 +1,4 @@
-package com.sopt.dive.presentation.main.component
+package com.sopt.uniqlo.presentation.main.component
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.fadeIn
@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +24,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.extension.noRippleClickable
 import com.sopt.uniqlo.presentation.main.MainTab
 import kotlinx.collections.immutable.ImmutableList
@@ -44,12 +44,10 @@ fun MainBottomBar(
         exit = slideOutVertically(targetOffsetY = { it }) + fadeOut(),
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
     ) {
         Row (
             modifier = Modifier
                 .fillMaxWidth()
-                .clip(RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp))
         ) {
             tabs.forEach { tab ->
                 MainBottomBarTab(
@@ -88,7 +86,12 @@ fun MainBottomBarTab(
 
         Text(
             text = stringResource(tab.contentDescription),
-            style = MaterialTheme.typography.labelSmall,
+            style = UniqloTheme.typography.caption.r_9,
+            color = if (isSelected) {
+                UniqloTheme.colors.black
+            } else {
+                UniqloTheme.colors.gray400
+            }
         )
     }
 }
