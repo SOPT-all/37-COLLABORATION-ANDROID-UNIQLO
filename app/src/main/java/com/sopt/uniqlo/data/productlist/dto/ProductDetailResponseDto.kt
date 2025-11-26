@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class ProductDetailResponseDto(
     @SerialName("productId")
-    val productId: Long,
+    val productId: Int,
     @SerialName("productImageUrl")
     val productImageUrl: List<String>,
     @SerialName("colorCode")
@@ -25,7 +25,7 @@ data class ProductDetailResponseDto(
     @SerialName("reviewCount")
     val reviewCount: Int
 ) {
-    fun toProductDetailEntity() = ProductDetailEntity(
+    fun toEntity() = ProductDetailEntity(
         id = productId,
         imageUrl = productImageUrl,
         colorHexCodes = colorCode,
