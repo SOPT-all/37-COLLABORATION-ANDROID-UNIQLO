@@ -36,8 +36,14 @@ import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
 @Composable
 fun DetailPageRoute(
     paddingValues: PaddingValues,
+    id: Int,
     viewModel: DetailPageViewModel = hiltViewModel(),
 ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.setProductId(id)
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()

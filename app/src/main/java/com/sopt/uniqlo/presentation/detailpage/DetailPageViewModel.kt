@@ -28,8 +28,6 @@ class DetailPageViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(DetailPageUiState())
     val uiState: StateFlow<DetailPageUiState> = _uiState.asStateFlow()
 
-    val id = 1
-
     val detailDescriptionDummyData = DetailDescriptionModel(
         detailPageUrl = emptyList(),
         detailText = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
@@ -121,6 +119,14 @@ class DetailPageViewModel @Inject constructor(
         setStyleHintList()
     }
 
+    fun setProductId(id: Int) {
+        _uiState.update {
+            it.copy(
+                productId = id
+            )
+        }
+    }
+
     fun setStyleHintLiked(id: Int) {
         val currentStyleHintList = _uiState.value.styleHintList
         val updatedStyleHintList = currentStyleHintList.map { styleHint ->
@@ -176,7 +182,7 @@ class DetailPageViewModel @Inject constructor(
 
     fun setDetailDescriptionData() {
         viewModelScope.launch {
-            getProductDetailUseCase(productId = id)
+            getProductDetailUseCase(productId = _uiState.value.productId)
                 .onSuccess { data ->
                     _uiState.update { state ->
                         state.copy(
@@ -217,7 +223,7 @@ class DetailPageViewModel @Inject constructor(
 
     fun setStyleHintList() {
         viewModelScope.launch {
-            getStyleHintListUseCase(productId = id)
+            getStyleHintListUseCase(productId = _uiState.value.productId)
                 .onSuccess { data ->
                     _uiState.update { state ->
                         state.copy(
