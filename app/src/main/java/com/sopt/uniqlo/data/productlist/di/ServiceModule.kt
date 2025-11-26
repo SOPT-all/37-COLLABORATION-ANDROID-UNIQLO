@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
+import retrofit2.create
 import javax.inject.Singleton
 
 @Module
@@ -14,5 +15,5 @@ object ServiceModule {
     @Provides
     @Singleton
     fun provideProductService(retrofit: Retrofit): ProductService =
-        retrofit.create(ProductService::class.java)
+        retrofit.create()
 }
