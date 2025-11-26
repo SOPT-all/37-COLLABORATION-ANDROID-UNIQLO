@@ -6,5 +6,5 @@ import jakarta.inject.Inject
 class GetProductDetailUseCase @Inject constructor(
     private val repository: DetailPageRepository
 ){
-    suspend operator fun invoke(productId: Int) = repository.getProductDetail(productId)
+    suspend operator fun invoke(productId: Int) = repository.getProductDetailDescription(productId)
 }

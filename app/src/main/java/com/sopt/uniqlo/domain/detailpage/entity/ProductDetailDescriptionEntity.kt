@@ -1,6 +1,6 @@
 package com.sopt.uniqlo.domain.detailpage.entity
 
-data class ProductDetailEntity (
+data class ProductDetailDescriptionEntity (
     val detailImageUrl: List<String>,
     val detailText: String,
     val descriptionText: List<String>,

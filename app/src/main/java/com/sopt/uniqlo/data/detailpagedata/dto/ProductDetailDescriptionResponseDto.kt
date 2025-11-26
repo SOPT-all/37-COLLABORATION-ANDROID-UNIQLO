@@ -1,11 +1,11 @@
 package com.sopt.uniqlo.data.detailpage.dto
 
-import com.sopt.uniqlo.domain.detailpage.entity.ProductDetailEntity
+import com.sopt.uniqlo.domain.detailpage.entity.ProductDetailDescriptionEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ProductDetailResponseDto(
+data class ProductDetailDescriptionResponseDto(
     @SerialName("detailImageUrlList")
     val detailImageUrl: List<String>,
     @SerialName("detailText")
@@ -17,7 +17,7 @@ data class ProductDetailResponseDto(
     @SerialName("sizeDetailTextList")
     val sizeDetailText: List<String>
 ) {
-    fun toDomain() = ProductDetailEntity(
+    fun toDomain() = ProductDetailDescriptionEntity(
         detailImageUrl = detailImageUrl,
         detailText = detailText,
         descriptionText = descriptionText,

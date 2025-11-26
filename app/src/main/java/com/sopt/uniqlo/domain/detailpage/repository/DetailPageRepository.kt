@@ -1,12 +1,12 @@
 package com.sopt.uniqlo.domain.detailpage.repository
 
-import com.sopt.uniqlo.domain.detailpage.entity.ProductDetailEntity
+import com.sopt.uniqlo.domain.detailpage.entity.ProductDetailDescriptionEntity
 import com.sopt.uniqlo.domain.detailpage.entity.StyleHintEntity
 
 interface DetailPageRepository {
-    suspend fun getProductDetail(
+    suspend fun getProductDetailDescription(
         productId: Int
-    ): Result<ProductDetailEntity>
+    ): Result<ProductDetailDescriptionEntity>
 
     suspend fun getStyleHintList(
         productId: Int

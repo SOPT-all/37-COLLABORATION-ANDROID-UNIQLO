@@ -2,7 +2,7 @@ package com.sopt.uniqlo.data.detailpage.datasourceimpl
 
 import com.sopt.uniqlo.core.util.suspendRunCatching
 import com.sopt.uniqlo.data.detailpage.datasource.DetailPageDataSource
-import com.sopt.uniqlo.data.detailpage.dto.ProductDetailResponseDto
+import com.sopt.uniqlo.data.detailpage.dto.ProductDetailDescriptionResponseDto
 import com.sopt.uniqlo.data.detailpage.dto.StyleHintListResponseDto
 import com.sopt.uniqlo.data.detailpage.service.DetailPageService
 import javax.inject.Inject
@@ -10,7 +10,7 @@ import javax.inject.Inject
 class DetailPageDataSourceImpl @Inject constructor(
     private val service: DetailPageService
 ) : DetailPageDataSource {
-    override suspend fun getProductDetail(productId: Int): Result<ProductDetailResponseDto> =
+    override suspend fun getProductDetailDescription(productId: Int): Result<ProductDetailDescriptionResponseDto> =
         suspendRunCatching {
             val response = service.getProductDetail(productId)
             if (response.isSuccessful) {

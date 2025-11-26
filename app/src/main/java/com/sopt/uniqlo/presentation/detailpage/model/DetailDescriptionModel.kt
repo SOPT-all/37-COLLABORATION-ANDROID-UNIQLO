@@ -1,6 +1,6 @@
 package com.sopt.uniqlo.presentation.detailpage.model
 
-import com.sopt.uniqlo.domain.detailpage.entity.ProductDetailEntity
+import com.sopt.uniqlo.domain.detailpage.entity.ProductDetailDescriptionEntity
 
 data class DetailDescriptionModel(
     val detailPageUrl: List<String>,
@@ -10,7 +10,7 @@ data class DetailDescriptionModel(
     val sizeDetailText: List<String>,
 )
 
-fun ProductDetailEntity.toUiModel() : DetailDescriptionModel {
+fun ProductDetailDescriptionEntity.toUiModel() : DetailDescriptionModel {
     return DetailDescriptionModel(
         detailPageUrl = detailImageUrl,
         detailText = detailText,

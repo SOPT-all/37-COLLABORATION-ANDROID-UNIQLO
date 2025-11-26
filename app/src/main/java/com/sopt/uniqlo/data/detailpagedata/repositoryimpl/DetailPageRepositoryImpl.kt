@@ -2,9 +2,9 @@ package com.sopt.uniqlo.data.detailpage.repositoryimpl
 
 import com.sopt.uniqlo.core.util.suspendRunCatching
 import com.sopt.uniqlo.data.detailpage.datasource.DetailPageDataSource
-import com.sopt.uniqlo.data.detailpage.dto.ProductDetailResponseDto
+import com.sopt.uniqlo.data.detailpage.dto.ProductDetailDescriptionResponseDto
 import com.sopt.uniqlo.data.detailpage.dto.StyleHintListResponseDto
-import com.sopt.uniqlo.domain.detailpage.entity.ProductDetailEntity
+import com.sopt.uniqlo.domain.detailpage.entity.ProductDetailDescriptionEntity
 import com.sopt.uniqlo.domain.detailpage.entity.StyleHintEntity
 import com.sopt.uniqlo.domain.detailpage.repository.DetailPageRepository
 import jakarta.inject.Inject
@@ -14,11 +14,11 @@ class DetailPageRepositoryImpl @Inject constructor(
     private val dataSource: DetailPageDataSource
 ) : DetailPageRepository {
 
-    override suspend fun getProductDetail(productId: Int): Result<ProductDetailEntity> =
+    override suspend fun getProductDetailDescription(productId: Int): Result<ProductDetailDescriptionEntity> =
         suspendRunCatching {
-            val dto = dataSource.getProductDetail(productId).getOrElse { exception ->
+            val dto = dataSource.getProductDetailDescription(productId).getOrElse { exception ->
                 Timber.e("$exception")
-                ProductDetailResponseDto(
+                ProductDetailDescriptionResponseDto(
                     detailImageUrl = emptyList(),
                     detailText = "",
                     descriptionText = emptyList(),
