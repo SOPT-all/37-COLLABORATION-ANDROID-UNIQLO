@@ -7,3 +7,7 @@ data class ProductDetailState(
     val productDetailUiState: UiState<ProductInfoUiModel> = UiState.Loading,
     val selectedColorName: String = ""
 )
+
+sealed interface ProductDetailSideEffect {
+    data class ShowToast(val message: String) : ProductDetailSideEffect
+}

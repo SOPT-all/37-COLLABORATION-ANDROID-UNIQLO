@@ -25,7 +25,9 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.util.UiState
@@ -35,16 +37,18 @@ import com.sopt.uniqlo.presentation.productlist.component.ProductFilterBar
 import com.sopt.uniqlo.presentation.productlist.component.ProductListHeader
 import com.sopt.uniqlo.presentation.productlist.model.FilterChipModel
 import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
+import com.sopt.uniqlo.presentation.productlist.state.ProductListSideEffect
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ProductListRoute(
     paddingValues: PaddingValues,
-    onProductClick: (Long) -> Unit,
+    onProductClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProductListViewModel = hiltViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val categories = stringArrayResource(id = R.array.product_top_categories).toImmutableList()
     val filterNames = stringArrayResource(id = R.array.product_filters).toList()
 
@@ -53,6 +57,17 @@ fun ProductListRoute(
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is ProductListSideEffect.ShowToast -> {
+                        Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
 
     when (val state = uiState.productListState) {
         is UiState.Success -> {
@@ -115,8 +130,8 @@ fun ProductListScreen(
     productList: ImmutableList<ProductUiModel>,
     onTabSelected: (Int) -> Unit,
     onFilterSelect: (FilterChipModel) -> Unit,
-    onFavoriteToggle: (Long) -> Unit,
-    onProductClick: (Long) -> Unit,
+    onFavoriteToggle: (Int) -> Unit,
+    onProductClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(

@@ -6,10 +6,14 @@ import androidx.lifecycle.viewModelScope
 import com.sopt.uniqlo.core.util.UiState
 import com.sopt.uniqlo.domain.productdetail.usecase.GetProductDetailUseCase
 import com.sopt.uniqlo.presentation.productdetail.model.toUiModel
+import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailSideEffect
 import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,13 +27,16 @@ class ProductDetailViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(ProductDetailState())
     val uiState: StateFlow<ProductDetailState> = _uiState.asStateFlow()
 
-    private val productId: Long = savedStateHandle["productId"] ?: 1L
+    private val _sideEffect = MutableSharedFlow<ProductDetailSideEffect>()
+    val sideEffect: SharedFlow<ProductDetailSideEffect> = _sideEffect.asSharedFlow()
+
+    private val productId: Int = savedStateHandle["productId"] ?: 1
 
     init {
         loadProductDetail(productId)
     }
 
-    private fun loadProductDetail(productId: Long) {
+    private fun loadProductDetail(productId: Int) {
         viewModelScope.launch {
             getProductDetailUseCase(productId)
                 .onSuccess { productDetailEntity ->
@@ -42,11 +49,16 @@ class ProductDetailViewModel @Inject constructor(
                     }
                 }
                 .onFailure { throwable ->
+                    val errorMessage = throwable.message ?: "상품 정보를 불러오지 못했습니다."
                     _uiState.update {
                         it.copy(
-                            productDetailUiState = UiState.Failure(throwable.message ?: "상품 정보를 불러오지 못했습니다."),
+                            productDetailUiState = UiState.Failure(errorMessage),
                         )
                     }
+
+                    _sideEffect.emit(
+                        ProductDetailSideEffect.ShowToast("상품 정보를 불러오는데 실패했습니다: $errorMessage")
+                    )
                 }
         }
     }

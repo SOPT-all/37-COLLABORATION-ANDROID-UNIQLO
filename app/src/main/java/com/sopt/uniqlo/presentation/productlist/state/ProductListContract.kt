@@ -14,5 +14,4 @@ data class ProductListState(
 
 sealed interface ProductListSideEffect {
     data class ShowToast(val message: String) : ProductListSideEffect
-    data class NavigateToDetail(val productId: Long) : ProductListSideEffect
 }

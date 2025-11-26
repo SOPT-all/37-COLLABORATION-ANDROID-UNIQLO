@@ -21,13 +21,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.util.UiState
 import com.sopt.uniqlo.presentation.productdetail.component.ProductImageGallery
 import com.sopt.uniqlo.presentation.productdetail.component.ProductInfoSection
 import com.sopt.uniqlo.presentation.productdetail.model.ColorOption
 import com.sopt.uniqlo.presentation.productdetail.model.ProductInfoUiModel
+import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailSideEffect
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
@@ -36,8 +39,20 @@ fun ProductDetailRoute(
     modifier: Modifier = Modifier,
     viewModel: ProductDetailViewModel = hiltViewModel(),
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is ProductDetailSideEffect.ShowToast -> {
+                        Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
 
     when (val state = uiState.productDetailUiState) {
         is UiState.Success -> {
@@ -62,13 +77,6 @@ fun ProductDetailRoute(
         }
 
         is UiState.Failure -> {
-            LaunchedEffect(Unit) {
-                Toast.makeText(
-                    context,
-                    "상품 정보를 불러오는데 실패했습니다: ${state.msg}",
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
             Box(
                 modifier = modifier
                     .fillMaxSize()
@@ -108,7 +116,12 @@ fun ProductDetailScreen(
 
         // 2. 상품 정보 섹션
         ProductInfoSection(
-            productInfo = uiState,
+            name = uiState.name,
+            productNumber = uiState.productNumber,
+            price = uiState.price,
+            rating = uiState.rating,
+            reviewCount = uiState.reviewCount,
+            colorOptions = uiState.colorOptions,
             selectedColor = selectedColorName,
             onColorSelected = { colorOption ->
                 onColorOptionClick(colorOption.name)

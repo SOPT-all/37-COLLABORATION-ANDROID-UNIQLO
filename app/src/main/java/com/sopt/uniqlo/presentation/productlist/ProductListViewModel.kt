@@ -29,7 +29,7 @@ class ProductListViewModel @Inject constructor(
     private val _sideEffect = MutableSharedFlow<ProductListSideEffect>()
     val sideEffect: SharedFlow<ProductListSideEffect> = _sideEffect.asSharedFlow()
 
-    private val favoriteMap: MutableMap<Long, Boolean> = mutableMapOf()
+    private val favoriteMap: MutableMap<Int, Boolean> = mutableMapOf()
 
     init {
         loadProductList()
@@ -55,16 +55,21 @@ class ProductListViewModel @Inject constructor(
                     }
                 }
                 .onFailure { failure ->
+                    val errorMessage = failure.message ?: "상품 목록을 불러오지 못했습니다."
                     _uiState.update {
                         it.copy(
-                            productListState = UiState.Failure(failure.message ?: "")
+                            productListState = UiState.Failure(errorMessage)
                         )
                     }
+
+                    _sideEffect.emit(
+                        ProductListSideEffect.ShowToast("상품 목록을 불러오는데 실패했습니다: $errorMessage")
+                    )
                 }
         }
     }
 
-    fun onFavoriteToggle(id: Long) {
+    fun onFavoriteToggle(id: Int) {
         val state = _uiState.value.productListState
         if (state is UiState.Success) {
             val isCurrentFavorite = favoriteMap[id] ?: false
