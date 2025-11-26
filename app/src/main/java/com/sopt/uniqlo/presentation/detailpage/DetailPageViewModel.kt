@@ -3,21 +3,32 @@ package com.sopt.uniqlo.presentation.detailpage
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sopt.uniqlo.R
+import com.sopt.uniqlo.domain.detailpage.usecase.GetProductDetailUseCase
+import com.sopt.uniqlo.domain.detailpage.usecase.GetStyleHintListUseCase
 import com.sopt.uniqlo.presentation.detailpage.model.DetailDescriptionModel
 import com.sopt.uniqlo.presentation.detailpage.model.ReviewModel
 import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
 import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
+import com.sopt.uniqlo.presentation.detailpage.model.toUiModel
 import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
-class DetailPageViewModel @Inject constructor() : ViewModel() {
+@HiltViewModel
+class DetailPageViewModel @Inject constructor(
+    private val getProductDetailUseCase: GetProductDetailUseCase,
+    private val getStyleHintListUseCase: GetStyleHintListUseCase
+) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailPageUiState())
     val uiState: StateFlow<DetailPageUiState> = _uiState.asStateFlow()
+
+    val id = 1
 
     val detailDescriptionDummyData = DetailDescriptionModel(
         detailPageUrl = emptyList(),
@@ -104,13 +115,12 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
 
 
     init {
-        setDetailDescriptionDummyData()
-        setSizeInformationDummyList()
-        setReviewDummyList()
-        setStyleHintDummyList()
+        setDetailDescriptionData()
+        setSizeInformationList()
+        setReviewList()
+        setStyleHintList()
     }
 
-    //TODO("아래 두가지 같을 때를 대비해 각각 Url, title 말고 index를 사용하는 방법은 없을까? -> 하나만 바꾸는 식으로 해야하는가")
     fun setStyleHintLiked(id: Int) {
         val currentStyleHintList = _uiState.value.styleHintList
         val updatedStyleHintList = currentStyleHintList.map { styleHint ->
@@ -164,17 +174,28 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setDetailDescriptionDummyData() {
+    fun setDetailDescriptionData() {
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    detailDescription = detailDescriptionDummyData
-                )
-            }
+            getProductDetailUseCase(productId = id)
+                .onSuccess { data ->
+                    _uiState.update { state ->
+                        state.copy(
+                            detailDescription = data.toUiModel()
+                        )
+                    }
+                }
+                .onFailure { failure ->
+                    Timber.e( "$failure")
+                    _uiState.update {
+                        it.copy(
+                            detailDescription = detailDescriptionDummyData
+                        )
+                    }
+                }
         }
     }
 
-    fun setSizeInformationDummyList() {
+    fun setSizeInformationList() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -184,7 +205,7 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setReviewDummyList() {
+    fun setReviewList() {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -194,13 +215,28 @@ class DetailPageViewModel @Inject constructor() : ViewModel() {
         }
     }
 
-    fun setStyleHintDummyList() {
+    fun setStyleHintList() {
         viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    styleHintList = styleHintDummyList
-                )
-            }
+            getStyleHintListUseCase(productId = id)
+                .onSuccess { data ->
+                    _uiState.update { state ->
+                        state.copy(
+                            styleHintList = data.toUiModel()
+                        )
+                    }
+                }
+                .onFailure { failure ->
+                    Timber.e("$failure")
+                    _uiState.update {
+                        it.copy(
+                            styleHintList = styleHintDummyList.mapIndexed { index, entity ->
+                                entity.copy(
+                                    id = index + 1
+                                )
+                            }
+                        )
+                    }
+                }
         }
     }
 }
