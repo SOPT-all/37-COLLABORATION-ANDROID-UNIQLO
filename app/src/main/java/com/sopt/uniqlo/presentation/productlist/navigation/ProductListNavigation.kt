@@ -17,11 +17,12 @@ fun NavController.navigateToProductList(
 
 fun NavGraphBuilder.productListGraph(
     paddingValues: PaddingValues,
-    navigateToDetail: () -> Unit
+    navigateToDetail: (Int) -> Unit
 ) {
     composable<ProductList> {
         ProductListRoute(
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            onProductClick = navigateToDetail
         )
     }
 }

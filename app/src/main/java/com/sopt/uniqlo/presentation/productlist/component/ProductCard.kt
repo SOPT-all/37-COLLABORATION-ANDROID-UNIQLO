@@ -36,14 +36,14 @@ import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
 @Composable
 fun ProductCard(
     product: ProductUiModel,
-    onItemClick: (Long) -> Unit,
-    onFavoriteToggle: (Long) -> Unit,
+    onProductClick: (Int) -> Unit,
+    onFavoriteToggle: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .noRippleClickable { onItemClick(product.id) },
+            .noRippleClickable { onProductClick(product.id) },
         verticalArrangement = Arrangement.Center
     ) {
         AsyncImage(
@@ -203,8 +203,8 @@ private fun ReviewRow(product: ProductUiModel) {
 
         Text(
             text = formattedRating,
-            color = UniqloTheme.colors.gray600,
-            style = UniqloTheme.typography.caption.r_9
+            color = UniqloTheme.colors.black,
+            style = UniqloTheme.typography.caption.l_12
         )
 
         Spacer(modifier = Modifier.width(3.dp))
@@ -222,7 +222,7 @@ private fun ReviewRow(product: ProductUiModel) {
 @Composable
 private fun ProductCardPreview() {
     val sampleProductSale = ProductUiModel(
-        id = 1L,
+        id = 1,
         imageUrl = "",
         colorHexCodes = listOf("#222222", "#9A775B", "#234266", "#FFFFFF"),
         genderAndSizeRange = "WOMEN, XS~3XL",
@@ -235,7 +235,7 @@ private fun ProductCardPreview() {
         isFavorite = true
     )
     val sampleProductNormal = ProductUiModel(
-        id = 2L,
+        id = 2,
         imageUrl = "",
         colorHexCodes = listOf("#828388", "#303030", "#3D2D2D"),
         genderAndSizeRange = "WOMEN, XS~XXL",
@@ -252,13 +252,13 @@ private fun ProductCardPreview() {
         Row() {
             ProductCard(
                 product = sampleProductSale,
-                onItemClick = {},
+                onProductClick = {},
                 onFavoriteToggle = { _ -> },
                 modifier = Modifier.weight(1f)
             )
             ProductCard(
                 product = sampleProductNormal,
-                onItemClick = {},
+                onProductClick = {},
                 onFavoriteToggle = { _ -> },
                 modifier = Modifier.weight(1f)
             )

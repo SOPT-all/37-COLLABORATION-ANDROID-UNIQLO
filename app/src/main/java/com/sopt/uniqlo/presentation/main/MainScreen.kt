@@ -5,20 +5,15 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -27,6 +22,8 @@ import com.sopt.uniqlo.presentation.main.component.MainBottomBar
 import com.sopt.uniqlo.core.designsystem.component.UniqloTopbar
 import com.sopt.uniqlo.presentation.category.navigation.categoryGraph
 import com.sopt.uniqlo.presentation.dummy.navigation.dummyGraph
+import com.sopt.uniqlo.presentation.productdetail.navigation.productDetailGraph
+import com.sopt.uniqlo.presentation.productlist.navigation.productListGraph
 import com.sopt.uniqlo.presentation.home.navigation.homeGraph
 import com.sopt.uniqlo.presentation.mypage.navigation.myPageGraph
 import com.sopt.uniqlo.presentation.wishlist.navigation.wishListGraph
@@ -120,6 +117,15 @@ fun MainScreen(
             myPageGraph(
                 paddingValues = innerPadding,
                 navigateUp = appState::navigateUp
+            )
+
+            productListGraph(
+                paddingValues = innerPadding,
+                navigateToDetail = appState::navigateToProductDetail
+            )
+
+            productDetailGraph(
+                paddingValues = innerPadding
             )
         }
     }

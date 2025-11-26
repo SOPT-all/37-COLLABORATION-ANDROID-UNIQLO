@@ -7,7 +7,7 @@ import kotlinx.collections.immutable.toPersistentList
 
 @Immutable
 data class ProductUiModel(
-    val id: Long,
+    val id: Int,
     val imageUrl: String,
     val colorHexCodes: List<String>,
     val genderAndSizeRange: String,
@@ -36,7 +36,7 @@ fun ProductEntity.toUiModel(isFavorite: Boolean) : ProductUiModel {
     )
 }
 
-fun List<ProductEntity>.toUiModel(favoriteMap : Map<Long, Boolean>) : PersistentList<ProductUiModel> {
+fun List<ProductEntity>.toUiModel(favoriteMap : Map<Int, Boolean>) : PersistentList<ProductUiModel> {
     return map { entity ->
         entity.toUiModel(isFavorite = favoriteMap [entity.id] ?: false)
     }.toPersistentList()
