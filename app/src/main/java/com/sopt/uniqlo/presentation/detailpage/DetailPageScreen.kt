@@ -36,8 +36,14 @@ import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
 @Composable
 fun DetailPageRoute(
     paddingValues: PaddingValues,
+    id: Int,
     viewModel: DetailPageViewModel = hiltViewModel(),
 ) {
+
+    LaunchedEffect(Unit) {
+        viewModel.setProductId(id)
+    }
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     val listState = rememberLazyListState()
@@ -114,8 +120,8 @@ fun DetailPageScreen(
     uiState: DetailPageUiState,
     listState: LazyListState,
     onTabSelected: (TabState) -> Unit,
-    onStyleHintClick: (String) -> Unit,
-    onReviewHelpfulClick: (String, Boolean) -> Unit,
+    onStyleHintClick: (Int) -> Unit,
+    onReviewHelpfulClick: (Int, Boolean) -> Unit,
     onWishClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -132,10 +138,7 @@ fun DetailPageScreen(
         ) {
             //제품 정보
             item {
-                ProductDetail(
-                    detailDescription = uiState.detailDescription
-                )
-                HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
+
             }
             //탭바
             stickyHeader {
@@ -172,9 +175,9 @@ fun DetailPageScreen(
                     reviewList = uiState.reviewList,
                     reviewStarPointAverage = uiState.reviewStarPointAverage,
                     reviewFitAverage = uiState.reviewFitAverage,
-                    onHelpfulClick = { title, isSelected ->
+                    onHelpfulClick = { id, isSelected ->
                         onReviewHelpfulClick(
-                            title,
+                            id,
                             isSelected
                         )
                     }

@@ -36,7 +36,7 @@ fun Review(
     reviewList: List<ReviewModel>,
     reviewStarPointAverage: Float,
     reviewFitAverage: Int,
-    onHelpfulClick: (String, Boolean) -> Unit,
+    onHelpfulClick: (Int, Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -92,7 +92,7 @@ fun Review(
                 ReviewItem(
                     review = review,
                     onHelpfulClick = {
-                        onHelpfulClick(review.title, review.isHelpful)
+                        onHelpfulClick(review.id, review.isHelpful)
                     }
                 )
             }

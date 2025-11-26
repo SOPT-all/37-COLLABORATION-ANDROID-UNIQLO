@@ -31,7 +31,7 @@ import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
 @Composable
 fun StyleHint(
     styleHintList: List<StyleHintModel>,
-    onLikedClick: (String) -> Unit,
+    onLikedClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -51,7 +51,7 @@ fun StyleHint(
                 StyleHintItem(
                     imgUrl = styleHint.imgUrl,
                     isLiked = styleHint.isLiked,
-                    onLikedClick = { onLikedClick(styleHint.imgUrl) }
+                    onLikedClick = { onLikedClick(styleHint.id) }
                 )
             }
         }

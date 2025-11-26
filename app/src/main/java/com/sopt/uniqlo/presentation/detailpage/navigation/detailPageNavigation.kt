@@ -10,21 +10,26 @@ import com.sopt.uniqlo.presentation.detailpage.DetailPageRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateDetailPage(
+    id: Int,
     navOptions: NavOptions? = null
 ) {
-    navigate(DetailPage, navOptions)
+    navigate(DetailPage(id = id), navOptions)
 }
 
 fun NavGraphBuilder.detailPageGraph(
     paddingValues: PaddingValues,
     navigateUp: () -> Unit
 ) {
-    composable<DetailPage> {
+    composable<DetailPage> { backStackEntry ->
+        val id = backStackEntry.arguments?.getInt("id") ?: 0
         DetailPageRoute(
-            paddingValues = paddingValues
+            paddingValues = paddingValues,
+            id = id
         )
     }
 }
 
 @Serializable
-data object DetailPage : Route
+data class DetailPage(
+    val id: Int
+) : Route
