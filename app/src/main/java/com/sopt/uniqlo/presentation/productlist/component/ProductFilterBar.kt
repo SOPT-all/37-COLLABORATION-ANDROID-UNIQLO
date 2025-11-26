@@ -37,7 +37,7 @@ fun ProductFilterBar(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp, vertical = 13.dp),
-        horizontalArrangement = Arrangement.spacedBy(4.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         items(
@@ -102,7 +102,6 @@ private fun ProductFilterBarPreview() {
             FilterChipModel(id = 3, name = "카테고리", icon = downArrowIcon, isSelected = false),
             FilterChipModel(id = 4, name = "가격", icon = downArrowIcon, isSelected = false),
             FilterChipModel(id = 5, name = "색상", icon = downArrowIcon, isSelected = false),
-            FilterChipModel(id = 6, name = "사이즈", icon = downArrowIcon, isSelected = false),
         ).toImmutableList()
     }
 
