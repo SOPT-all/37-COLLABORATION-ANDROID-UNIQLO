@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">37-COLLABORATION-ANDROID-UNIQLO</string>
+    <string name="home">홈</string>
+    <string name="category">카테고리</string>
+    <string name="wishlist">위시리스트</string>
+    <string name="mypage">마이페이지</string>
 
     <string-array name="product_top_categories">
         <item>경량 패딩(PUFF TECH)</item>

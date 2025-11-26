@@ -113,7 +113,7 @@ fun CategoryScreen (
                     text = {
                         Text(
                             text = title,
-                            style = UniqloTheme.typography.caption.m_12,
+                            style = UniqloTheme.typography.reddit.caption_m_12,
                             color = if (index == selectedTabIndex) {
                                 UniqloTheme.colors.black
                             } else {
