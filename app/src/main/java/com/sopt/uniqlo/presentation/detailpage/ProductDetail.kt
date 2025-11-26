@@ -61,43 +61,39 @@ private fun MaterialDetail(
     materialText: String = "적당한 탄탄함이 느껴지는 원단을 사용하였습니다.",
 ) {
     Column(
-        modifier = modifier
+        horizontalAlignment = Alignment.Start,
+        verticalArrangement = Arrangement.spacedBy(25.dp),
+        modifier = modifier,
     ) {
-        Column(
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.spacedBy(25.dp),
-            modifier = Modifier,
+        Text(
+            text = "제품 상세",
+            color = UniqloTheme.colors.black,
+            style = UniqloTheme.typography.body.sb_13
+        )
+        Row(
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
-            Text(
-                text = "제품 상세",
-                color = UniqloTheme.colors.black,
-                style = UniqloTheme.typography.body.sb_13
-            )
-            Row(
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                if (materialImageUrl.isNullOrBlank()) {
-                    Box(
-                        modifier = Modifier
-                            .size(width = 160.dp, height = 160.dp)
-                            .background(UniqloTheme.colors.blueMain)
-                    )
-                } else {
-                    AsyncImage(
-                        model = materialImageUrl,
-                        contentDescription = materialDescription,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(width = 160.dp, height = 160.dp)
-                    )
-                }
-                Text(
-                    text = materialText,
-                    color = UniqloTheme.colors.black,
-                    style = UniqloTheme.typography.caption.r_12
+            if (materialImageUrl.isNullOrBlank()) {
+                Box(
+                    modifier = Modifier
+                        .size(width = 160.dp, height = 160.dp)
+                        .background(UniqloTheme.colors.blueMain)
+                )
+            } else {
+                AsyncImage(
+                    model = materialImageUrl,
+                    contentDescription = materialDescription,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(width = 160.dp, height = 160.dp)
                 )
             }
+            Text(
+                text = materialText,
+                color = UniqloTheme.colors.black,
+                style = UniqloTheme.typography.caption.r_12
+            )
         }
     }
 }
@@ -130,9 +126,7 @@ private fun ProductDetailDescription(
                     )
                 }
             }
-            Column(
-                modifier = Modifier,
-            ) {
+            Column {
                 Text(
                     text = "기능 세부정보",
                     color = UniqloTheme.colors.black,
@@ -147,9 +141,7 @@ private fun ProductDetailDescription(
                     )
                 }
             }
-            Column(
-                modifier = Modifier,
-            ) {
+            Column {
                 Text(
                     text = "사이즈",
                     color = UniqloTheme.colors.black,
@@ -162,9 +154,7 @@ private fun ProductDetailDescription(
                     style = UniqloTheme.typography.body.r_13,
                 )
             }
-            Column(
-                modifier = Modifier,
-            ) {
+            Column{
                 sizeDetailText.forEach { text ->
                     TextWithLeadingIcon(
                         text = text
@@ -209,7 +199,6 @@ private fun Inquiry(
 
         Column(
             verticalArrangement = Arrangement.spacedBy(3.dp),
-            modifier = Modifier
         ) {
             Text(
                 text = "배송 / 결제 정보",
