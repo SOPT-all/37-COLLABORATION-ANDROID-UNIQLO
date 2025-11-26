@@ -9,11 +9,29 @@ import javax.inject.Inject
 class ProductDataSourceImpl @Inject constructor(
     private val productService: ProductService
 ) : ProductDataSource {
-    override suspend fun getProducts(): List<ProductResponseDto> {
-        return productService.getProducts().data ?: emptyList()
+    override suspend fun getProducts(): Result<List<ProductResponseDto>> {
+        return try {
+            val response = productService.getProducts()
+            if (response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception("서버에서 데이터를 받지 못했습니다."))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
-    override suspend fun getProductDetail(productId: Long): ProductDetailResponseDto {
-        return productService.getProductDetail(productId).data ?: throw IllegalStateException("Product detail data is null")
+    override suspend fun getProductDetail(productId: Int): Result<ProductDetailResponseDto> {
+        return try {
+            val response = productService.getProductDetail(productId)
+            if (response.data != null) {
+                Result.success(response.data)
+            } else {
+                Result.failure(Exception("상품 상세 정보를 받지 못했습니다. productId: $productId"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 }
