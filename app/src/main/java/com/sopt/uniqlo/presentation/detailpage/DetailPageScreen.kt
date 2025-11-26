@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.runtime.Composable
@@ -39,26 +40,6 @@ fun DetailPageRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    DetailPageScreen(
-        paddingValues = paddingValues,
-        uiState = uiState,
-        onTabSelected = viewModel::setTabState,
-        onStyleHintClick = viewModel::setStyleHintLiked,
-        onReviewHelpfulClick = viewModel::setReviewHelpful,
-        onWishClick = viewModel::setIsWished,
-    )
-}
-
-@Composable
-fun DetailPageScreen(
-    paddingValues: PaddingValues,
-    uiState: DetailPageUiState,
-    onTabSelected: (TabState) -> Unit,
-    onStyleHintClick: (String) -> Unit,
-    onReviewHelpfulClick: (String, Boolean) -> Unit,
-    onWishClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
     val listState = rememberLazyListState()
 
     val tabStartIndices = remember {
@@ -70,6 +51,13 @@ fun DetailPageScreen(
             TabState.REVIEW to 5,
         )
     }
+
+    val tabDescendingOrder = listOf(
+        TabState.REVIEW,
+        TabState.STYLE,
+        TabState.SIZE,
+        TabState.DETAIL
+    )
 
     LaunchedEffect(uiState.tabState) {
         if (!listState.isScrollInProgress) {
@@ -93,14 +81,7 @@ fun DetailPageScreen(
 
             val firstVisibleItemIndex = listState.firstVisibleItemIndex
 
-            val tabsInDescendingOrder = listOf(
-                TabState.REVIEW,
-                TabState.STYLE,
-                TabState.SIZE,
-                TabState.DETAIL
-            )
-
-            tabsInDescendingOrder.firstOrNull { tab ->
+            tabDescendingOrder.firstOrNull { tab ->
                 val tabStartIndex = tabStartIndices[tab] ?: Int.MAX_VALUE
                 tabStartIndex <= firstVisibleItemIndex
             } ?: TabState.TOP
@@ -111,10 +92,33 @@ fun DetailPageScreen(
         if (!listState.isScrollInProgress &&
             currentTab != uiState.tabState
         ) {
-            onTabSelected(currentTab)
+            viewModel.setTabState(currentTab)
         }
     }
 
+
+    DetailPageScreen(
+        paddingValues = paddingValues,
+        uiState = uiState,
+        listState = listState,
+        onTabSelected = viewModel::setTabState,
+        onStyleHintClick = viewModel::setStyleHintLiked,
+        onReviewHelpfulClick = viewModel::setReviewHelpful,
+        onWishClick = viewModel::setIsWished,
+    )
+}
+
+@Composable
+fun DetailPageScreen(
+    paddingValues: PaddingValues,
+    uiState: DetailPageUiState,
+    listState: LazyListState,
+    onTabSelected: (TabState) -> Unit,
+    onStyleHintClick: (String) -> Unit,
+    onReviewHelpfulClick: (String, Boolean) -> Unit,
+    onWishClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     Box(
         modifier = modifier
             .background(UniqloTheme.colors.white)
@@ -127,6 +131,12 @@ fun DetailPageScreen(
             modifier = Modifier.fillMaxSize(),
         ) {
             //제품 정보
+            item {
+                ProductDetail(
+                    detailDescription = uiState.detailDescription
+                )
+                HorizontalDivider(thickness = 10.dp, color = UniqloTheme.colors.gray100)
+            }
             //탭바
             stickyHeader {
                 TabBar(
@@ -290,6 +300,7 @@ private fun DetailPagePreview() {
                 )
             ),
         ),
+        listState = LazyListState(),
         onTabSelected = {},
         onStyleHintClick = {},
         onReviewHelpfulClick = { _, _ -> },
