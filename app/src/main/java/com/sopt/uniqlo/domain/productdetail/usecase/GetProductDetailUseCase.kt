@@ -7,7 +7,7 @@ import javax.inject.Inject
 class GetProductDetailUseCase @Inject constructor(
     private val productRepository: ProductRepository
 ) {
-    suspend operator fun invoke(productId: Long): Result<ProductDetailEntity> {
+    suspend operator fun invoke(productId: Int): Result<ProductDetailEntity> {
         return productRepository.getProductDetail(productId)
     }
 }

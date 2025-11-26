@@ -10,7 +10,7 @@ import com.sopt.uniqlo.presentation.productdetail.ProductDetailRoute
 import kotlinx.serialization.Serializable
 
 fun NavController.navigateToProductDetail(
-    productId: Long,
+    productId: Int,
     navOptions: NavOptions? = null
 ) {
     navigate(ProductDetail(productId = productId), navOptions)
@@ -19,7 +19,7 @@ fun NavController.navigateToProductDetail(
 fun NavGraphBuilder.productDetailGraph(
     paddingValues: PaddingValues,
 ){
-    composable<ProductDetail> { backStackEntry ->
+    composable<ProductDetail> {
         ProductDetailRoute(
             paddingValues = paddingValues
         )
@@ -27,4 +27,4 @@ fun NavGraphBuilder.productDetailGraph(
 }
 
 @Serializable
-data class ProductDetail(val productId: Long) : Route
+data class ProductDetail(val productId: Int) : Route

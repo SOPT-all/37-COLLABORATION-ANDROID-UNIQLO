@@ -36,8 +36,8 @@ import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
 @Composable
 fun ProductCard(
     product: ProductUiModel,
-    onProductClick: (Long) -> Unit,
-    onFavoriteToggle: (Long) -> Unit,
+    onProductClick: (Int) -> Unit,
+    onFavoriteToggle: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -222,7 +222,7 @@ private fun ReviewRow(product: ProductUiModel) {
 @Composable
 private fun ProductCardPreview() {
     val sampleProductSale = ProductUiModel(
-        id = 1L,
+        id = 1,
         imageUrl = "",
         colorHexCodes = listOf("#222222", "#9A775B", "#234266", "#FFFFFF"),
         genderAndSizeRange = "WOMEN, XS~3XL",
@@ -235,7 +235,7 @@ private fun ProductCardPreview() {
         isFavorite = true
     )
     val sampleProductNormal = ProductUiModel(
-        id = 2L,
+        id = 2,
         imageUrl = "",
         colorHexCodes = listOf("#828388", "#303030", "#3D2D2D"),
         genderAndSizeRange = "WOMEN, XS~XXL",

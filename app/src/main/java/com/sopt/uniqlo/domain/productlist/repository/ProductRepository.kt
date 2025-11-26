@@ -6,5 +6,5 @@ import com.sopt.uniqlo.domain.productlist.entity.ProductEntity
 interface ProductRepository {
     suspend fun getProducts(): Result<List<ProductEntity>>
 
-    suspend fun getProductDetail(productId: Long): Result<ProductDetailEntity>
+    suspend fun getProductDetail(productId: Int): Result<ProductDetailEntity>
 }

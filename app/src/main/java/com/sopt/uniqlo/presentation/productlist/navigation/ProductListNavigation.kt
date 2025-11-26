@@ -17,7 +17,7 @@ fun NavController.navigateToProductList(
 
 fun NavGraphBuilder.productListGraph(
     paddingValues: PaddingValues,
-    navigateToDetail: (Long) -> Unit
+    navigateToDetail: (Int) -> Unit
 ) {
     composable<ProductList> {
         ProductListRoute(

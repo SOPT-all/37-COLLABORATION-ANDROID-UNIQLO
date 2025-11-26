@@ -1,7 +1,7 @@
 package com.sopt.uniqlo.domain.productdetail.entity
 
 data class ProductDetailEntity(
-    val id: Long,
+    val id: Int,
     val imageUrl: List<String>,
     val colorHexCodes: List<String>,
     val colorMap: Map<String, String>,

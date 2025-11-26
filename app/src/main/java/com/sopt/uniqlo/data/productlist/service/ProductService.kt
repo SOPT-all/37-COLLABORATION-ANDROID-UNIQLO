@@ -12,6 +12,6 @@ interface ProductService {
 
     @GET("products/{productId}")
     suspend fun getProductDetail(
-        @Path("productId") productId: Long
+        @Path("productId") productId: Int
     ): BaseResponse<ProductDetailResponseDto>
 }

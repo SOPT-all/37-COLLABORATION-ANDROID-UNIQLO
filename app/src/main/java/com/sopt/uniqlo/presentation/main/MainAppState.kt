@@ -62,7 +62,7 @@ class MainAppState(
             initialValue = false
         )
 
-    fun navigateToProductDetail(productId: Long) {
+    fun navigateToProductDetail(productId: Int) {
         navController.navigateToProductDetail(productId)
     }
 
