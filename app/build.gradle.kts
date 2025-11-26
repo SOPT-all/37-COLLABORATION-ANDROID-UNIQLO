@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.bundles.hilt)
     ksp(libs.hilt.compiler)
     implementation(libs.timber)
+    implementation(libs.androidx.material3)
 
     debugImplementation(libs.bundles.debug)
     testImplementation(libs.bundles.unit.test)
