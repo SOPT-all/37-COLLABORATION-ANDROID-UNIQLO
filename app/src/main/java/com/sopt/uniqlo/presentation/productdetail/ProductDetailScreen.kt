@@ -1,70 +1,127 @@
 package com.sopt.uniqlo.presentation.productdetail
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.util.UiState
 import com.sopt.uniqlo.presentation.productdetail.component.ProductImageGallery
 import com.sopt.uniqlo.presentation.productdetail.component.ProductInfoSection
 import com.sopt.uniqlo.presentation.productdetail.model.ColorOption
 import com.sopt.uniqlo.presentation.productdetail.model.ProductInfoUiModel
-import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailState
+import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailSideEffect
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ProductDetailRoute(
     paddingValues: PaddingValues,
-    productId: Long,
+    modifier: Modifier = Modifier,
     viewModel: ProductDetailViewModel = hiltViewModel(),
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context = LocalContext.current
 
-    ProductDetailScreen(
-        uiState = uiState,
-        onColorOptionClick = viewModel::handleColorOptionClick,
-        modifier = Modifier.padding(paddingValues)
-    )
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is ProductDetailSideEffect.ShowToast -> {
+                        Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+    }
 
+    when (val state = uiState.productDetailUiState) {
+        is UiState.Success -> {
+            ProductDetailScreen(
+                paddingValues = paddingValues,
+                uiState = state.data,
+                selectedColorName = uiState.selectedColorName,
+                onColorOptionClick = viewModel::handleColorOptionClick,
+                modifier = modifier
+            )
+        }
+
+        is UiState.Loading -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is UiState.Failure -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "상품 정보를 불러오지 못했습니다.")
+            }
+        }
+
+        else -> {}
+    }
 }
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun ProductDetailScreen(
-    uiState: ProductDetailState,
+    paddingValues: PaddingValues,
+    uiState: ProductInfoUiModel,
+    selectedColorName: String,
     onColorOptionClick: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val product = (uiState.productDetailUiState as UiState.Success).data
-    val pagerState = rememberPagerState(pageCount = { product.imageUrls.size })
-
-    val selectedColorName = uiState.selectedColorName
+    val pagerState = rememberPagerState(pageCount = { uiState.imageUrls.size })
 
     Column(
         modifier = modifier
+            .padding(paddingValues)
             .fillMaxWidth()
     ) {
         // 1. 상품 이미지 갤러리
         ProductImageGallery(
-            imageUrls = product.imageUrls,
+            imageUrls = uiState.imageUrls,
             pagerState = pagerState,
             modifier = Modifier.fillMaxWidth()
         )
 
         // 2. 상품 정보 섹션
         ProductInfoSection(
-            productInfo = product,
+            name = uiState.name,
+            productNumber = uiState.productNumber,
+            price = uiState.price,
+            rating = uiState.rating,
+            reviewCount = uiState.reviewCount,
+            colorOptions = uiState.colorOptions,
             selectedColor = selectedColorName,
             onColorSelected = { colorOption ->
                 onColorOptionClick(colorOption.name)
@@ -80,7 +137,7 @@ private fun PreviewProductDetailScreen() {
     UniqloTheme {
         val dummyProduct = ProductInfoUiModel(
             name = "밀라노리브니트재킷",
-            imageUrls = List(3){"https://image.msscdn.net/thumbnails/images/goods_img/20250918/5486967/5486967_17617819130539_big.jpg?w=1200"}.toImmutableList(),
+            imageUrls = List(3) { "https://image.msscdn.net/thumbnails/images/goods_img/20250918/5486967/5486967_17617819130539_big.jpg?w=1200" }.toImmutableList(),
             productNumber = "479775",
             colorName = "09 BLACK",
             colorOptions = listOf(
@@ -93,14 +150,11 @@ private fun PreviewProductDetailScreen() {
             reviewCount = 24
         )
 
-        val dummyState = ProductDetailState(
-            productDetailUiState = UiState.Success(dummyProduct),
-            selectedColorName = "09 BLACK"
-        )
-
         ProductDetailScreen(
-            uiState = dummyState,
-            onColorOptionClick = {}
+            uiState = dummyProduct,
+            onColorOptionClick = {},
+            selectedColorName = "09 BLACK",
+            paddingValues = PaddingValues()
         )
     }
 }

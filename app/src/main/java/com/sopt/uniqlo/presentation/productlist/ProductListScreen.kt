@@ -1,23 +1,33 @@
 package com.sopt.uniqlo.presentation.productlist
 
+import android.widget.Toast
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.GridItemSpan
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.flowWithLifecycle
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.util.UiState
@@ -27,16 +37,18 @@ import com.sopt.uniqlo.presentation.productlist.component.ProductFilterBar
 import com.sopt.uniqlo.presentation.productlist.component.ProductListHeader
 import com.sopt.uniqlo.presentation.productlist.model.FilterChipModel
 import com.sopt.uniqlo.presentation.productlist.model.ProductUiModel
+import com.sopt.uniqlo.presentation.productlist.state.ProductListSideEffect
 import kotlinx.collections.immutable.ImmutableList
-import kotlinx.collections.immutable.persistentListOf
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ProductListRoute(
     paddingValues: PaddingValues,
+    onProductClick: (Int) -> Unit,
     modifier: Modifier = Modifier,
     viewModel: ProductListViewModel = hiltViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
     val categories = stringArrayResource(id = R.array.product_top_categories).toImmutableList()
     val filterNames = stringArrayResource(id = R.array.product_filters).toList()
 
@@ -44,24 +56,68 @@ fun ProductListRoute(
         mutableStateOf(createFilterItems(filterNames))
     }
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-    val productList = when (val state = uiState.productListState) {
-        is UiState.Success -> state.data
-        else -> persistentListOf()
+    val context = LocalContext.current
+
+    LaunchedEffect(Unit) {
+        viewModel.sideEffect.flowWithLifecycle(lifecycleOwner.lifecycle)
+            .collect { sideEffect ->
+                when (sideEffect) {
+                    is ProductListSideEffect.ShowToast -> {
+                        Toast.makeText(context, sideEffect.message, Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
     }
 
-    ProductListScreen(
-        paddingValues = paddingValues,
-        totalCount = uiState.totalCount,
-        categories = categories,
-        selectedTabIndex = uiState.selectedTabIndex,
-        filterItems = filterItems,
-        productList = productList,
-        onTabSelected = { },
-        onFilterSelect = { },
-        onFavoriteToggle = viewModel::onFavoriteToggle,
-        modifier = modifier
-    )
+    when (val state = uiState.productListState) {
+        is UiState.Success -> {
+            ProductListScreen(
+                paddingValues = paddingValues,
+                totalCount = uiState.totalCount,
+                categories = categories,
+                selectedTabIndex = uiState.selectedTabIndex,
+                filterItems = filterItems,
+                productList = state.data,
+                onTabSelected = { },
+                onFilterSelect = { },
+                onFavoriteToggle = viewModel::onFavoriteToggle,
+                onProductClick = onProductClick,
+                modifier = modifier
+            )
+        }
 
+        is UiState.Loading -> {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
+        }
+
+        is UiState.Failure -> {
+            LaunchedEffect(Unit) {
+                Toast.makeText(
+                    context,
+                    "상품 목록을 불러오는데 실패했습니다: ${state.msg}",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .padding(paddingValues),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = "상품 목록을 불러오지 못했습니다.")
+            }
+        }
+
+        else -> {}
+    }
 }
 
 @Composable
@@ -74,7 +130,8 @@ fun ProductListScreen(
     productList: ImmutableList<ProductUiModel>,
     onTabSelected: (Int) -> Unit,
     onFilterSelect: (FilterChipModel) -> Unit,
-    onFavoriteToggle: (Long) -> Unit,
+    onFavoriteToggle: (Int) -> Unit,
+    onProductClick: (Int) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
@@ -113,7 +170,9 @@ fun ProductListScreen(
         ) { product ->
             ProductCard(
                 product = product,
-                onItemClick = { /* 상세 페이지 이동 */ },
+                onProductClick = {
+                    onProductClick(product.id)
+                },
                 onFavoriteToggle = onFavoriteToggle,
             )
         }
@@ -139,6 +198,9 @@ private fun createFilterItems(filterNames: List<String>): ImmutableList<FilterCh
 @Composable
 private fun ProductListRoutePreview() {
     UniqloTheme {
-        ProductListRoute(paddingValues = PaddingValues(0.dp))
+        ProductListRoute(
+            paddingValues = PaddingValues(0.dp),
+            onProductClick = {}
+        )
     }
 }

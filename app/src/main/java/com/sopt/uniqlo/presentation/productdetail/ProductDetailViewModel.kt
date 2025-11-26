@@ -1,49 +1,67 @@
 package com.sopt.uniqlo.presentation.productdetail
 
-import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.sopt.uniqlo.core.util.UiState
-import com.sopt.uniqlo.presentation.productdetail.model.ColorOption
-import com.sopt.uniqlo.presentation.productdetail.model.ProductInfoUiModel
+import com.sopt.uniqlo.domain.productdetail.usecase.GetProductDetailUseCase
+import com.sopt.uniqlo.presentation.productdetail.model.toUiModel
+import com.sopt.uniqlo.presentation.productdetail.navigation.ProductDetail
+import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailSideEffect
 import com.sopt.uniqlo.presentation.productdetail.state.ProductDetailState
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.collections.immutable.toImmutableList
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ProductDetailViewModel @Inject constructor() : ViewModel() {
+class ProductDetailViewModel @Inject constructor(
+    private val getProductDetailUseCase: GetProductDetailUseCase,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ProductDetailState())
     val uiState: StateFlow<ProductDetailState> = _uiState.asStateFlow()
 
+    private val _sideEffect = MutableSharedFlow<ProductDetailSideEffect>()
+    val sideEffect: SharedFlow<ProductDetailSideEffect> = _sideEffect.asSharedFlow()
+
+    private val productId: Int = savedStateHandle.toRoute<ProductDetail>().productId
+
     init {
-        loadProductDetail(productId = 1234L)
+        loadProductDetail(productId)
     }
 
-    private fun loadProductDetail(productId: Long) {
+    private fun loadProductDetail(productId: Int) {
         viewModelScope.launch {
+            getProductDetailUseCase(productId)
+                .onSuccess { productDetailEntity ->
+                    val uiModel = productDetailEntity.toUiModel()
+                    _uiState.update {
+                        it.copy(
+                            productDetailUiState = UiState.Success(uiModel),
+                            selectedColorName = uiModel.colorName
+                        )
+                    }
+                }
+                .onFailure { throwable ->
+                    val errorMessage = throwable.message ?: "상품 정보를 불러오지 못했습니다."
+                    _uiState.update {
+                        it.copy(
+                            productDetailUiState = UiState.Failure(errorMessage),
+                        )
+                    }
 
-            val dummyData = getDummyProductDetail(productId)
-
-            if (dummyData != null) {
-                _uiState.update {
-                    it.copy(
-                        productDetailUiState = UiState.Success(dummyData),
-                        selectedColorName = dummyData.colorName
+                    _sideEffect.emit(
+                        ProductDetailSideEffect.ShowToast("상품 정보를 불러오는데 실패했습니다: $errorMessage")
                     )
                 }
-            } else {
-                _uiState.update {
-                    it.copy(
-                        productDetailUiState = UiState.Failure("상품 정보를 찾을 수 없습니다: $productId"),
-                    )
-                }
-            }
         }
     }
 
@@ -54,22 +72,4 @@ class ProductDetailViewModel @Inject constructor() : ViewModel() {
             )
         }
     }
-}
-
-private fun getDummyProductDetail(productId: Long): ProductInfoUiModel? {
-    return ProductInfoUiModel(
-        imageUrls = List(3){"https://image.msscdn.net/thumbnails/images/goods_img/20250918/5486967/5486967_17617819130539_big.jpg?w=1200"}.toImmutableList(),
-        name = "밀라노리브니트재킷",
-        productNumber = "479775",
-        colorName = "09 BLACK",
-        colorOptions = listOf(
-            ColorOption("09 BLACK", Color.Black),
-            ColorOption("08 BROWN", Color(0xFF8B7355)),
-            ColorOption("07 NAVY", Color(0xFF1E3A8A)),
-            ColorOption("06 RED", Color(0xFFC80000))
-        ).toImmutableList(),
-        price = "59,900",
-        rating = 5.0f,
-        reviewCount = 100
-    )
 }
