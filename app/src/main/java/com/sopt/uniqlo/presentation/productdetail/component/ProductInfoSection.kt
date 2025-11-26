@@ -28,12 +28,17 @@ import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.extension.noRippleClickable
 import com.sopt.uniqlo.presentation.productdetail.model.ColorOption
-import com.sopt.uniqlo.presentation.productdetail.model.ProductInfoUiModel
+import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 
 @Composable
 fun ProductInfoSection(
-    productInfo: ProductInfoUiModel,
+    name: String,
+    productNumber: String,
+    price: String,
+    rating: Float,
+    reviewCount: Int,
+    colorOptions: ImmutableList<ColorOption>,
     selectedColor: String,
     onColorSelected: (ColorOption) -> Unit,
     modifier: Modifier = Modifier,
@@ -44,13 +49,13 @@ fun ProductInfoSection(
             .padding(horizontal = 16.dp, vertical = 8.5.dp)
     ) {
         Text(
-            text = productInfo.name,
+            text = name,
             color = UniqloTheme.colors.black,
             style = UniqloTheme.typography.title.r_20
         )
 
         Text(
-            text = "제품 번호:${productInfo.productNumber}",
+            text = "제품 번호:${productNumber}",
             color = UniqloTheme.colors.gray600,
             style = UniqloTheme.typography.body.r_13
         )
@@ -68,7 +73,7 @@ fun ProductInfoSection(
         Row(
             horizontalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            productInfo.colorOptions.forEach { colorOption ->
+            colorOptions.forEach { colorOption ->
                 ColorCircle(
                     color = colorOption.color,
                     isSelected = selectedColor == colorOption.name,
@@ -88,7 +93,7 @@ fun ProductInfoSection(
         ) {
             Row {
                 Text(
-                    text = productInfo.price,
+                    text = price,
                     color = UniqloTheme.colors.gray900,
                     style = UniqloTheme.typography.title.sb_26
                 )
@@ -101,8 +106,8 @@ fun ProductInfoSection(
             }
 
             RatingSection(
-                rating = productInfo.rating,
-                reviewCount = productInfo.reviewCount
+                rating = rating,
+                reviewCount = reviewCount
             )
         }
     }
@@ -182,11 +187,9 @@ private fun RatingSection(
 @Preview(showBackground = true)
 @Composable
 private fun PreviewProductInfoSection() {
-    val dummyProduct = ProductInfoUiModel(
+    ProductInfoSection(
         name = "밀라노리니트재킷",
-        imageUrls = listOf<String>().toImmutableList(),
         productNumber = "479775",
-        colorName = "09 BLACK",
         colorOptions = listOf(
             ColorOption("Black", Color.Black),
             ColorOption("Brown", Color(0xFF8B7355)),
@@ -194,12 +197,8 @@ private fun PreviewProductInfoSection() {
         ).toImmutableList(),
         price = "49,900",
         rating = 4.8f,
-        reviewCount = 24
-    )
-
-    ProductInfoSection(
-        productInfo = dummyProduct,
+        reviewCount = 24,
         selectedColor = "Black",
-        onColorSelected = {})
-
+        onColorSelected = {}
+    )
 }
