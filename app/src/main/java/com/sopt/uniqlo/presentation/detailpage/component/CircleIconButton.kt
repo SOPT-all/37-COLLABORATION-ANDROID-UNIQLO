@@ -18,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.extension.noRippleClickable
+import timber.log.Timber
 
 @Composable
 fun CircleIconButton(
@@ -33,6 +34,9 @@ fun CircleIconButton(
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
+            .noRippleClickable(
+                onClick = onClick
+            )
             .size(buttonSize.dp)
             .border(
                 width = 1.dp,
@@ -40,7 +44,6 @@ fun CircleIconButton(
                 shape = CircleShape
             )
             .background(color = buttonColor, shape = CircleShape)
-            .noRippleClickable(onClick = onClick)
     ){
         Icon(
             imageVector = ImageVector.vectorResource(id = icon),

@@ -6,13 +6,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navOptions
 import com.sopt.uniqlo.presentation.category.navigation.navigateCategory
+import com.sopt.uniqlo.presentation.detailpage.navigation.navigateDetailPage
 import com.sopt.uniqlo.presentation.home.navigation.Home
 import com.sopt.uniqlo.presentation.home.navigation.navigateHome
 import com.sopt.uniqlo.presentation.mypage.navigation.navigateMyPage
-import com.sopt.uniqlo.presentation.productdetail.navigation.navigateToProductDetail
+import com.sopt.uniqlo.presentation.productlist.navigation.navigateToProductList
 import com.sopt.uniqlo.presentation.wishlist.navigation.navigateWishList
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.SharingStarted
@@ -63,7 +65,7 @@ class MainAppState(
         )
 
     fun navigateToProductDetail(productId: Int) {
-        navController.navigateToProductDetail(productId)
+        navController.navigateDetailPage(productId)
     }
 
     fun navigate(tab: MainTab) {
@@ -88,6 +90,12 @@ class MainAppState(
 
     fun navigateUp() {
         navController.navigateUp()
+    }
+
+    fun navigateToProductList(
+        navOptions: NavOptions? = null
+    ) {
+        navController.navigateToProductList(navOptions)
     }
 
     private val clearStackNavOptions = navOptions {

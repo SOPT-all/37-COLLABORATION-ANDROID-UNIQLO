@@ -17,11 +17,12 @@ fun NavController.navigateCategory(
 
 fun NavGraphBuilder.categoryGraph(
     paddingValues: PaddingValues,
-    navigateUp: () -> Unit
+    navigateToProductList : () -> Unit
 ) {
     composable<Category> {
         CategoryRoute(
             paddingValues = paddingValues,
+            navigateToProductList = navigateToProductList
         )
     }
 }

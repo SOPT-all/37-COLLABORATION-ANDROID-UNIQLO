@@ -36,6 +36,7 @@ import timber.log.Timber
 @Composable
 fun CategoryRoute(
     paddingValues: PaddingValues,
+    navigateToProductList: () -> Unit,
     viewModel: CategoryViewModel = hiltViewModel()
 ) {
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -68,8 +69,7 @@ fun CategoryRoute(
         },
         onClickCategoryContent = {
             if (it == 3) {
-                Timber.d("3번 눌림")
-                //navigateToDetail()
+                navigateToProductList()
             }
         }
     )

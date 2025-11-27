@@ -1,4 +1,4 @@
-package com.sopt.uniqlo.presentation.productdetail.component
+package com.sopt.uniqlo.presentation.detailpage.component
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -27,7 +27,7 @@ import androidx.compose.ui.unit.dp
 import com.sopt.uniqlo.R
 import com.sopt.uniqlo.core.designsystem.theme.UniqloTheme
 import com.sopt.uniqlo.core.extension.noRippleClickable
-import com.sopt.uniqlo.presentation.productdetail.model.ColorOption
+import com.sopt.uniqlo.presentation.detailpage.model.ColorOption
 import kotlinx.collections.immutable.ImmutableList
 import kotlinx.collections.immutable.toImmutableList
 

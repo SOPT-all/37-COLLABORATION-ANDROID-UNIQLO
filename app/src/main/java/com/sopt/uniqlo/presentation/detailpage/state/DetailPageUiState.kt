@@ -1,7 +1,9 @@
 package com.sopt.uniqlo.presentation.detailpage.state
 
+import com.sopt.uniqlo.core.util.UiState
 import com.sopt.uniqlo.presentation.detailpage.TabState
 import com.sopt.uniqlo.presentation.detailpage.model.DetailDescriptionModel
+import com.sopt.uniqlo.presentation.detailpage.model.ProductInfoUiModel
 import com.sopt.uniqlo.presentation.detailpage.model.ReviewModel
 import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
 import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
@@ -23,4 +25,11 @@ data class DetailPageUiState (
     val reviewFitAverage: Int = 5,
     val isWished: Boolean = false,
     val isLoading: Boolean = false,
+
+    val productDetailUiState: UiState<ProductInfoUiModel> = UiState.Loading,
+    val selectedColorName: String = ""
 )
+
+sealed interface ProductDetailSideEffect {
+    data class ShowToast(val message: String) : ProductDetailSideEffect
+}

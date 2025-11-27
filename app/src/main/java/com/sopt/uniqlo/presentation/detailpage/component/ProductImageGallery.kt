@@ -1,4 +1,4 @@
-package com.sopt.uniqlo.presentation.productdetail.component
+package com.sopt.uniqlo.presentation.detailpage.component
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background

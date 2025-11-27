@@ -10,6 +10,10 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -27,6 +31,10 @@ fun WishListBar(
     wishListButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    var isWish by remember {
+        mutableStateOf(false)
+    }
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -35,8 +43,11 @@ fun WishListBar(
             .padding(start = 16.dp, end = 16.dp, top = 16.dp, bottom = 20.dp)
     ) {
         CircleIconButton(
-            icon = R.drawable.ic_heart,
-            onClick = iconButtonClick,
+            icon = if (isWish) R.drawable.ic_heart_filled else R.drawable.ic_heart,
+            onClick = {
+                iconButtonClick
+                isWish = !isWish
+            },
             buttonSize = 46
         )
         Spacer(modifier = Modifier.width(15.dp))

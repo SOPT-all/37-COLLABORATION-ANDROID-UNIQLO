@@ -5,6 +5,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.sopt.uniqlo.core.navigation.Route
 import com.sopt.uniqlo.presentation.detailpage.DetailPageRoute
 import kotlinx.serialization.Serializable
@@ -21,10 +22,8 @@ fun NavGraphBuilder.detailPageGraph(
     navigateUp: () -> Unit
 ) {
     composable<DetailPage> { backStackEntry ->
-        val id = backStackEntry.arguments?.getInt("id") ?: 0
         DetailPageRoute(
             paddingValues = paddingValues,
-            id = id
         )
     }
 }

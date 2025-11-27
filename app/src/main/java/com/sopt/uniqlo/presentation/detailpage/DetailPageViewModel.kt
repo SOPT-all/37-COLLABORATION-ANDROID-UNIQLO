@@ -1,19 +1,28 @@
 package com.sopt.uniqlo.presentation.detailpage
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.toRoute
 import com.sopt.uniqlo.R
+import com.sopt.uniqlo.core.util.UiState
 import com.sopt.uniqlo.domain.detailpage.usecase.GetProductDetailUseCase
 import com.sopt.uniqlo.domain.detailpage.usecase.GetStyleHintListUseCase
+import com.sopt.uniqlo.domain.productdetail.usecase.GetProductDetailHeaderUseCase
+import com.sopt.uniqlo.domain.review.GetReviewListUseCase
 import com.sopt.uniqlo.presentation.detailpage.model.DetailDescriptionModel
-import com.sopt.uniqlo.presentation.detailpage.model.ReviewModel
 import com.sopt.uniqlo.presentation.detailpage.model.SizeInformationItemModel
 import com.sopt.uniqlo.presentation.detailpage.model.StyleHintModel
 import com.sopt.uniqlo.presentation.detailpage.model.toUiModel
+import com.sopt.uniqlo.presentation.detailpage.navigation.DetailPage
 import com.sopt.uniqlo.presentation.detailpage.state.DetailPageUiState
+import com.sopt.uniqlo.presentation.detailpage.state.ProductDetailSideEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -22,11 +31,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailPageViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val getProductDetailUseCase: GetProductDetailUseCase,
-    private val getStyleHintListUseCase: GetStyleHintListUseCase
+    private val getProductDetailHeaderUseCase: GetProductDetailHeaderUseCase,
+    private val getStyleHintListUseCase: GetStyleHintListUseCase,
+    private val getReviewListUseCase: GetReviewListUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(DetailPageUiState())
     val uiState: StateFlow<DetailPageUiState> = _uiState.asStateFlow()
+
+    private val _sideEffect = MutableSharedFlow<ProductDetailSideEffect>()
+    val sideEffect: SharedFlow<ProductDetailSideEffect> = _sideEffect.asSharedFlow()
+
+    private val productId: Int = savedStateHandle.toRoute<DetailPage>().id
 
     val detailDescriptionDummyData = DetailDescriptionModel(
         detailPageUrl = emptyList(),
@@ -70,33 +87,6 @@ class DetailPageViewModel @Inject constructor(
             description = "나와 비슷한 체형의 고객이 착용한 사이즈를 확인해 보세요."
         )
     )
-
-    val reviewDummyList = listOf(
-        ReviewModel(
-            title = "가을 가을합니다",
-            content = "가을에 매장에서 입어보고 마음에 들어 온라인으로 xs사이즈 구매했는데 적당한 길이감에 단정하게 이쁩니다",
-            star = 5f,
-            createdAt = "2023/01/01",
-            height = "170cm",
-            gender = "남성",
-            recommend = 10,
-            size = "M",
-            color = "빨강",
-            fit = "정장",
-        ), ReviewModel(
-            title = "가을 가을합니다!",
-            content = "가을에 매장에서 입어보고 마음에 들어 온라인으로 xs사이즈 구매했는데 적당한 길이감에 단정하게 이쁩니다",
-            star = 5f,
-            createdAt = "2023/01/01",
-            height = "선택하지 않음",
-            gender = "선택하지 않음",
-            recommend = 10,
-            size = "M",
-            color = "빨강",
-            fit = "정장",
-        )
-    )
-
     val styleHintDummyList = listOf(
         StyleHintModel(
             imgUrl = "",
@@ -115,16 +105,9 @@ class DetailPageViewModel @Inject constructor(
     init {
         setDetailDescriptionData()
         setSizeInformationList()
-        setReviewList()
         setStyleHintList()
-    }
-
-    fun setProductId(id: Int) {
-        _uiState.update {
-            it.copy(
-                productId = id
-            )
-        }
+        getReviewList(productId)
+        loadProductDetail(productId)
     }
 
     fun setStyleHintLiked(id: Int) {
@@ -182,7 +165,7 @@ class DetailPageViewModel @Inject constructor(
 
     fun setDetailDescriptionData() {
         viewModelScope.launch {
-            getProductDetailUseCase(productId = _uiState.value.productId)
+            getProductDetailUseCase(productId = productId)
                 .onSuccess { data ->
                     _uiState.update { state ->
                         state.copy(
@@ -211,19 +194,10 @@ class DetailPageViewModel @Inject constructor(
         }
     }
 
-    fun setReviewList() {
-        viewModelScope.launch {
-            _uiState.update {
-                it.copy(
-                    reviewList = reviewDummyList
-                )
-            }
-        }
-    }
 
     fun setStyleHintList() {
         viewModelScope.launch {
-            getStyleHintListUseCase(productId = _uiState.value.productId)
+            getStyleHintListUseCase(productId = productId)
                 .onSuccess { data ->
                     _uiState.update { state ->
                         state.copy(
@@ -243,6 +217,57 @@ class DetailPageViewModel @Inject constructor(
                         )
                     }
                 }
+        }
+    }
+
+    fun getReviewList(productId: Int) {
+        viewModelScope.launch {
+            getReviewListUseCase(productId.toLong())
+                .onSuccess { result ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            reviewList = result.mapIndexed { index, entity ->
+                                entity.toUiModel(id = index)
+                            }
+                        )
+                    }
+                }
+                .onFailure(Timber::e)
+        }
+    }
+
+    private fun loadProductDetail(productId: Int) {
+        viewModelScope.launch {
+            getProductDetailHeaderUseCase(productId)
+                .onSuccess { productDetailEntity ->
+                    val uiModel = productDetailEntity.toUiModel()
+                    _uiState.update {
+                        it.copy(
+                            productDetailUiState = UiState.Success(uiModel),
+                            selectedColorName = uiModel. colorName
+                        )
+                    }
+                }
+                .onFailure { throwable ->
+                    val errorMessage = throwable.message ?: "상품 정보를 불러오지 못했습니다."
+                    _uiState.update {
+                        it.copy(
+                            productDetailUiState = UiState.Failure(errorMessage),
+                        )
+                    }
+
+                    _sideEffect.emit(
+                        ProductDetailSideEffect.ShowToast("상품 정보를 불러오는데 실패했습니다: $errorMessage")
+                    )
+                }
+        }
+    }
+
+    fun handleColorOptionClick(colorName: String) {
+        _uiState.update {
+            it.copy(
+                selectedColorName = colorName,
+            )
         }
     }
 }

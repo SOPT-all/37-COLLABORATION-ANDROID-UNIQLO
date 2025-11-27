@@ -1,6 +1,6 @@
 package com.sopt.uniqlo.data.productlist.dto
 
-import com.sopt.uniqlo.domain.productdetail.entity.ProductDetailEntity
+import com.sopt.uniqlo.domain.productdetail.entity.ProductDetailHeaderEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -25,7 +25,7 @@ data class ProductDetailResponseDto(
     @SerialName("reviewCount")
     val reviewCount: Int
 ) {
-    fun toEntity() = ProductDetailEntity(
+    fun toEntity() = ProductDetailHeaderEntity(
         id = productId,
         imageUrl = productImageUrl,
         colorHexCodes = colorCode,

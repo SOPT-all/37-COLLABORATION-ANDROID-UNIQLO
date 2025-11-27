@@ -1,7 +1,7 @@
 package com.sopt.uniqlo.data.productlist.respositoryimpl
 
 import com.sopt.uniqlo.data.productlist.datasource.ProductDataSource
-import com.sopt.uniqlo.domain.productdetail.entity.ProductDetailEntity
+import com.sopt.uniqlo.domain.productdetail.entity.ProductDetailHeaderEntity
 import com.sopt.uniqlo.domain.productlist.entity.ProductEntity
 import com.sopt.uniqlo.domain.productlist.repository.ProductRepository
 import javax.inject.Inject
@@ -15,7 +15,7 @@ class ProductRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getProductDetail(productId: Int): Result<ProductDetailEntity> {
+    override suspend fun getProductDetail(productId: Int): Result<ProductDetailHeaderEntity> {
         return productDataSource.getProductDetail(productId).map { dto ->
             dto.toEntity()
         }
