@@ -97,8 +97,8 @@ private fun StyleHintItem(
             tint = UniqloTheme.colors.black,
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .size(36.dp)
-                .padding(4.dp)
+                .size(44.dp)
+                .padding(11.dp)
                 .noRippleClickable(onLikedClick)
         )
     }
